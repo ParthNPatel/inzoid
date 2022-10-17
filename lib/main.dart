@@ -15,7 +15,8 @@ import 'package:sizer/sizer.dart';
 import 'controller/filter_screen_controller.dart';
 
 void main() async {
-  ///123
+  ///Inzoid
+  ///Inx
   await GetStorage.init();
   runApp(MyApp());
 }
