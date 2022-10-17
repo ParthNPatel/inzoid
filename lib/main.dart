@@ -16,6 +16,7 @@ import 'controller/filter_screen_controller.dart';
 
 void main() async {
   ///Inzoid
+  ///Inx
   await GetStorage.init();
   runApp(MyApp());
 }
