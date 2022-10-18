@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inzoid/view/bottom_bar_screen.dart';
 import 'package:sizer/sizer.dart';
-
 import '../components/common_widget.dart';
 import '../constant/color_const.dart';
 import '../constant/const_size.dart';

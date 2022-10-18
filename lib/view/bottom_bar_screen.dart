@@ -38,7 +38,7 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
               ? Center(child: Text("Notifications"))
               : pageSelected == 2
                   ? Center(child: Text("Favourite"))
-                  : Center(child: Text("Profile")),
+                  : ProfileScreen(),
       // if (pageSelected == 0) HomeScreen(),
       // if (pageSelected == 1) Center(child: Text("Notifications")),
       // if (pageSelected == 2) Center(child: Text("Favourite")),
