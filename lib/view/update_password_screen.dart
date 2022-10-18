@@ -10,6 +10,8 @@ import 'package:inzoid/view/home_screen.dart';
 import 'package:inzoid/view/sign_in_screen.dart';
 import 'package:sizer/sizer.dart';
 
+import 'bottom_bar_screen.dart';
+
 class UpdatePasswordScreen extends StatefulWidget {
   const UpdatePasswordScreen({Key? key}) : super(key: key);
 
@@ -108,7 +110,8 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                       if (_passWordController.text.length >= 6) {
                         if (_passWordConfirmController.text ==
                             _passWordController.text) {
-                          Get.offAll(() => HomeScreen());
+                          Get.offAll(() => BottomNavScreen());
+                          // Get.offAll(() => HomeScreen());
                         } else {
                           CommonWidget.getSnackBar(
                               title: TextConst.failed,

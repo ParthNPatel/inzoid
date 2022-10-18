@@ -6,6 +6,7 @@ import 'package:inzoid/constant/const_size.dart';
 import 'package:inzoid/constant/text_const.dart';
 import 'package:inzoid/constant/text_styel.dart';
 import 'package:inzoid/get_storage_services/get_storage_service.dart';
+import 'package:inzoid/view/bottom_bar_screen.dart';
 import 'package:inzoid/view/home_screen.dart';
 import 'package:inzoid/view/reset_password_screen.dart';
 import 'package:inzoid/view/sign_up_screen.dart';
@@ -100,7 +101,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         GetStorageServices.setUserName(
                             username: _emailController.text);
                         GetStorageServices.setUserLoggedIn();
-                        Get.off(() => HomeScreen());
+                        Get.off(() => BottomNavScreen());
                       } else {
                         CommonWidget.getSnackBar(
                             title: TextConst.failed,

@@ -3,15 +3,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:inzoid/constant/text_const.dart';
 import 'package:inzoid/view/bottom_bar_screen.dart';
-import 'package:inzoid/view/category_screen.dart';
-import 'package:inzoid/view/filter_screen.dart';
-import 'package:inzoid/view/home_screen.dart';
-import 'package:inzoid/view/product_detail_screen.dart';
-import 'package:inzoid/view/sign_in_screen.dart';
-import 'package:inzoid/view/sign_up_screen.dart';
-
 import 'package:sizer/sizer.dart';
-
 import 'controller/filter_screen_controller.dart';
 
 void main() async {

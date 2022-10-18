@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:inzoid/constant/color_const.dart';
 import 'package:inzoid/constant/image_const.dart';
 import 'package:inzoid/view/home_screen.dart';
+import 'package:inzoid/view/profile_screen.dart';
 
 class BottomNavScreen extends StatefulWidget {
   BottomNavScreen({Key? key}) : super(key: key);
@@ -25,8 +26,9 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
     HomeScreen(),
     Center(child: Text("Notifications")),
     Center(child: Text("Favourite")),
-    Center(child: Text("Profile")),
+    ProfileScreen()
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,7 +69,16 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
                               ? themColors309D9D
                               : Color(0xffCFCFCF),
                         ),
-                        Text(bottomItems[index]['label'])
+                        SizedBox(
+                          height: 2,
+                        ),
+                        Text(
+                          bottomItems[index]['label'],
+                          style: TextStyle(
+                              color: pageSelected == index
+                                  ? Colors.black
+                                  : Color(0xffCFCFCF)),
+                        )
                       ]),
                 ),
               ),

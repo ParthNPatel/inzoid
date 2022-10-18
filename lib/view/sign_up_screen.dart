@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:inzoid/view/bottom_bar_screen.dart';
 import 'package:sizer/sizer.dart';
 
 import '../components/common_widget.dart';
@@ -102,7 +103,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   onTap: () {
                     if (_fullNameController.text.isNotEmpty &&
                         _passWordController.text.isNotEmpty) {
-                      Get.off(() => HomeScreen());
+                      Get.off(() => BottomNavScreen());
                     } else {
                       CommonWidget.getSnackBar(
                           title: TextConst.failed,
