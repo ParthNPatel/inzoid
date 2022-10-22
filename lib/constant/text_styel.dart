@@ -21,7 +21,24 @@ class CommonText {
       {required String text,
       double? fontSize,
       Color? color,
+      TextDecoration textDecoration = TextDecoration.none,
       FontWeight fontWeight = FontWeight.w500}) {
+    return Text(
+      text,
+      style: TextStyle(
+          fontWeight: fontWeight,
+          decoration: textDecoration,
+          fontSize: fontSize,
+          color: color,
+          fontFamily: TextConst.fontFamily),
+    );
+  }
+
+  static textBoldWight600(
+      {required String text,
+      double? fontSize,
+      Color? color,
+      FontWeight fontWeight = FontWeight.w600}) {
     return Text(
       text,
       style: TextStyle(

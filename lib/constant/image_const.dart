@@ -58,4 +58,18 @@ class ImageConst {
   static String notification1 = "assets/image/notification1.svg";
   static String favourite = "assets/image/favourite.svg";
   static String profile = "assets/image/profile.svg";
+
+  /// Profile Screen:
+  static String personel = "assets/image/profile_icons/personal.svg";
+  static String payments = "assets/image/profile_icons/payments1.svg";
+  static String notification2 = "assets/image/profile_icons/notificatin2.svg";
+  static String language = "assets/image/profile_icons/language.svg";
+  static String privacy = "assets/image/profile_icons/privacy.svg";
+  static String aboutUs = "assets/image/profile_icons/abou_us.svg";
+  static String safety = "assets/image/profile_icons/safety.svg";
+  static String support = "assets/image/profile_icons/support.svg";
+  static String getHelp = "assets/image/profile_icons/get_help.svg";
+  static String terms = "assets/image/profile_icons/terms.svg";
+  static String feedback = "assets/image/profile_icons/feedback.svg";
+  static String user = "assets/image/profile_icons/user.png";
 }
