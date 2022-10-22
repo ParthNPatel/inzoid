@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inzoid/components/common_widget.dart';
@@ -9,7 +10,13 @@ import 'package:inzoid/get_storage_services/get_storage_service.dart';
 import 'package:inzoid/view/home_screen.dart';
 import 'package:inzoid/view/reset_password_screen.dart';
 import 'package:inzoid/view/sign_up_screen.dart';
+import 'package:inzoid/view/verification_screen.dart';
 import 'package:sizer/sizer.dart';
+
+enum MobileVerificationState {
+  SHOW_MOBILE_FORM_STATE,
+  SHOW_OTP_FORM_STATE,
+}
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({Key? key}) : super(key: key);
@@ -21,8 +28,11 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passWordController = TextEditingController();
-
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  MobileVerificationState currentState =
+      MobileVerificationState.SHOW_MOBILE_FORM_STATE;
   bool isObscured = true;
+  String? verificationId;
 
   @override
   Widget build(BuildContext context) {
@@ -141,5 +151,58 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
       ),
     );
+  }
+
+  signInMethod() async {
+    try {
+      if (_emailController.text.length == 10) {
+        await _auth.verifyPhoneNumber(
+          phoneNumber: '+91' + _emailController.text,
+          verificationCompleted: (phoneAuthCredential) async {
+            // setState(() {
+            //   showLoading = false;
+            // });
+            // signInWithPhoneAuthCredential(phoneAuthCredential);
+          },
+          verificationFailed: (verificationFailed) async {
+            // setState(() {
+            //   showLoading = false;
+            // });
+            print('----verificationFailed---${verificationFailed.message}');
+            CommonWidget.getSnackBar(
+              message: verificationFailed.message!,
+              title: 'Failed',
+              duration: 2,
+              color: Colors.red,
+            );
+          },
+          codeSent: (verificationId, resendingToken) async {
+            setState(() {
+              //  showLoading = false;
+              currentState = MobileVerificationState.SHOW_OTP_FORM_STATE;
+              this.verificationId = verificationId;
+
+              Get.to(VerificationScreen(
+                emailOrPhoneText: '+91' + _emailController.text,
+                verificationId: verificationId,
+              ));
+            });
+          },
+          codeAutoRetrievalTimeout: (verificationId) async {},
+        );
+      } else {
+        CommonWidget.getSnackBar(
+            message: 'Please enter your mobile number',
+            color: Colors.red,
+            title: '');
+      }
+    } on FirebaseException catch (e) {
+      CommonWidget.getSnackBar(
+          message: '${e.message}',
+          color: Colors.red,
+          title: 'Failed',
+          duration: 2);
+      print('MAG ERROR----${e.message}');
+    }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -16,7 +17,10 @@ import 'package:otp_text_field/style.dart';
 
 class VerificationScreen extends StatefulWidget {
   final String emailOrPhoneText;
-  const VerificationScreen({Key? key, required this.emailOrPhoneText})
+  final String? verificationId;
+
+  const VerificationScreen(
+      {Key? key, required this.emailOrPhoneText, this.verificationId})
       : super(key: key);
 
   @override
@@ -132,4 +136,29 @@ class _VerificationScreenState extends State<VerificationScreen> {
       ),
     );
   }
+
+  // signInWithPhoneAuthCredential(PhoneAuthCredential phoneAuthCredential) async {
+  //   _otpScreenController.showLoading = true;
+  //
+  //   try {
+  //     final authCredential =
+  //         await _auth.signInWithCredential(phoneAuthCredential);
+  //     PreferenceManager.setTokenId(_auth.currentUser!.uid.toString());
+  //
+  //     if (authCredential.user != null) {
+  //       String uid = _auth.currentUser!.uid.toString();
+  //       print('---------uid in current user $uid');
+  //       PreferenceManager.setTokenId(uid);
+  //       PreferenceManager.setLoginValue(widget.mobileNumberWithoutCuntryCode!);
+  //
+  //       PreferenceManager.setLoginType('mobile');
+  //
+  //       await PreferenceManager.setSyncContact(widget.isSyncContact);
+  //       navigatorScreen();
+  //     }
+  //   } on FirebaseAuthException catch (e) {
+  //     _otpScreenController.showLoading = false;
+  //     CommonSnackBar.showSnackBar(msg: '${e.message}', successStatus: false);
+  //   }
+  // }
 }
