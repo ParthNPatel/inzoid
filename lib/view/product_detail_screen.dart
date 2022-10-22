@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:inzoid/view/sign_in_screen.dart';
 import 'package:sizer/sizer.dart';
 import '../components/common_widget.dart';
 import '../components/product_tile.dart';
@@ -10,11 +12,12 @@ import '../constant/image_const.dart';
 import '../constant/text_const.dart';
 import '../constant/text_styel.dart';
 import '../controller/filter_screen_controller.dart';
+import '../get_storage_services/get_storage_service.dart';
 
 class ProductDetailScreen extends StatefulWidget {
-  final categoryName;
+  final productData;
 
-  const ProductDetailScreen({super.key, required this.categoryName});
+  const ProductDetailScreen({super.key, this.productData});
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
@@ -88,7 +91,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         ),
         centerTitle: true,
         title: CommonText.textBoldWight700(
-            text: widget.categoryName, color: Colors.black),
+            text: widget.productData['category'], color: Colors.black),
         actions: [
           InkResponse(
             onTap: () {},
@@ -116,7 +119,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         width: double.infinity,
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                              image: AssetImage('assets/image/detail.png'),
+                              image: NetworkImage(
+                                  '${widget.productData['listOfImage'][index]}'),
                               fit: BoxFit.cover),
                         ),
                       );
@@ -126,15 +130,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         currentPage = val;
                       });
                     },
-                    itemCount: 5,
+                    itemCount: widget.productData['listOfImage'].length,
                   ),
                 ),
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  bottom: 20,
-                  child: buildDots(currentPage, 5),
-                )
+                widget.productData['listOfImage'].length > 1
+                    ? Positioned(
+                        left: 0,
+                        right: 0,
+                        bottom: 20,
+                        child: buildDots(currentPage,
+                            widget.productData['listOfImage'].length),
+                      )
+                    : SizedBox()
               ],
             ),
             Padding(
@@ -147,13 +154,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     height: 2.h,
                   ),
                   CommonText.textBoldWight700(
-                      text: "CLAUDETTE CORSET SHIRT DRESS IN WHITE",
+                      text: "${widget.productData['productName']}",
                       fontSize: 11.sp),
                   SizedBox(
                     height: 3.sp,
                   ),
                   CommonText.textBoldWight400(
-                      text: "TMP Company",
+                      text: "${widget.productData['brand']}",
                       fontSize: 10.sp,
                       color: CommonColor.greyColor838589),
                   SizedBox(
@@ -188,14 +195,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           CommonText.textBoldWight700(
-                              text: "₹999,00", fontSize: 12.sp),
+                              text: "${widget.productData['price']}",
+                              fontSize: 12.sp),
                           SizedBox(
                             width: 2.w,
                           ),
                           CommonText.textBoldWight700(
                               color: CommonColor.greyColorD9D9D9,
                               textDecoration: TextDecoration.lineThrough,
-                              text: "₹1299,00",
+                              text: "${widget.productData['oldPrice']}",
                               fontSize: 12.sp),
                         ],
                       ),
@@ -281,48 +289,74 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ),
                   CommonText.textBoldWight500(
                       color: CommonColor.greyColor838589,
-                      text:
-                          "A Shirt Is A profitable Investment In The Wardrobe. And here's why:",
+                      text: "${widget.productData['description']}",
                       fontSize: 12.sp),
                   SizedBox(
                     height: 7.sp,
-                  ),
-                  CommonText.textBoldWight500(
-                      color: CommonColor.greyColor838589,
-                      text: " - shirts perfectly match with any bottom",
-                      fontSize: 12.sp),
-                  SizedBox(
-                    height: 7.sp,
-                  ),
-                  CommonText.textBoldWight500(
-                      color: CommonColor.greyColor838589,
-                      text:
-                          "  - shirts made of natural fabrics are suitable for any time of the year.",
-                      fontSize: 12.sp),
-                  SizedBox(
-                    height: 20.sp,
                   ),
                   CommonText.textBoldWight700(
                       text: "Similar Products", fontSize: 15.sp),
                   SizedBox(
                     height: 15.sp,
                   ),
-                  GridView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: 4,
-                    shrinkWrap: true,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 2.sp / 3.8.sp,
-                        crossAxisSpacing: 15),
-                    itemBuilder: (context, index) => ProductTile(
-                      image: data[index]['image'],
-                      title: data[index]['title'],
-                      subtitle: data[index]['subtitle'],
-                      price: data[index]['price'],
-                      oldPrice: data[index]['oldPrice'],
-                      rating: data[index]['rating'],
-                    ),
+                  FutureBuilder(
+                    future: FirebaseFirestore.instance
+                        .collection('Admin')
+                        .doc('all_product')
+                        .collection('product_data')
+                        .where('category',
+                            isEqualTo: '${widget.productData['category']}')
+                        .orderBy('create_time', descending: true)
+                        .limit(10)
+                        .get(),
+                    builder: (context, AsyncSnapshot snapshot) {
+                      if (snapshot.hasData) {
+                        return GridView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: snapshot.data.docs.length,
+                          shrinkWrap: true,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 2.sp / 3.8.sp,
+                                  crossAxisSpacing: 15),
+                          itemBuilder: (context, index) {
+                            var fetchMenData = snapshot.data.docs![index];
+
+                            return ProductTile(
+                              onTap: () {
+                                if (GetStorageServices
+                                        .getUserLoggedInStatus() ==
+                                    true) {
+                                  print('call la');
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ProductDetailScreen(
+                                          productData: fetchMenData,
+                                        ),
+                                      ));
+                                  // Get.to(() => ProductDetailScreen(
+                                  //       productData: fetchMenData,
+                                  //     ));
+                                } else {
+                                  Get.to(() => SignInScreen());
+                                }
+                              },
+                              image: fetchMenData['listOfImage'][0],
+                              title: fetchMenData['productName'],
+                              subtitle: fetchMenData['brand'],
+                              price: fetchMenData['price'],
+                              oldPrice: fetchMenData['oldPrice'],
+                              rating: "(200 Ratings)",
+                            );
+                          },
+                        );
+                      } else {
+                        return CircularProgressIndicator();
+                      }
+                    },
                   ),
                 ],
               ),

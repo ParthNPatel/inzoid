@@ -65,6 +65,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   onTap: () {
                     if (_emailController.text.isNotEmpty) {
                       Get.to(() => VerificationScreen(
+                            isEmail: false,
+                            verificationId: '',
                             emailOrPhoneText: _emailController.text,
                           ));
                     } else {

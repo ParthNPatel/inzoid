@@ -45,6 +45,8 @@ dependencies:
   firebase_auth: ^4.0.1
   firebase_core: ^2.0.0
   flutter_progress_hud: ^2.0.2
+  email_auth: ^1.0.0
+  cloud_firestore: ^4.0.2
 
 
 dev_dependencies:

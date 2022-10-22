@@ -4,11 +4,14 @@ import 'package:inzoid/constant/color_const.dart';
 import 'package:inzoid/constant/const_size.dart';
 import 'package:inzoid/constant/text_styel.dart';
 import 'package:inzoid/view/filter_screen.dart';
+import 'package:inzoid/view/product_detail_screen.dart';
+import 'package:inzoid/view/sign_in_screen.dart';
 import 'package:sizer/sizer.dart';
 import 'package:get/get.dart';
 
 import '../components/product_tile.dart';
 import '../constant/image_const.dart';
+import '../get_storage_services/get_storage_service.dart';
 
 class CategoryScreen extends StatefulWidget {
   final category;
@@ -184,6 +187,15 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   childAspectRatio: 2.sp / 3.7.sp,
                   crossAxisSpacing: 10),
               itemBuilder: (context, index) => ProductTile(
+                onTap: () {
+                  if (GetStorageServices.getUserLoggedInStatus() == true) {
+                    Get.to(() => ProductDetailScreen(
+                          productData: '',
+                        ));
+                  } else {
+                    Get.to(() => SignInScreen());
+                  }
+                },
                 image: data[index]['image'],
                 title: data[index]['title'],
                 subtitle: data[index]['subtitle'],

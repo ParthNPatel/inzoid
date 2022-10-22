@@ -16,6 +16,7 @@ class ProductTile extends StatelessWidget {
   final price;
   final oldPrice;
   final rating;
+  final onTap;
 
   const ProductTile(
       {super.key,
@@ -24,7 +25,8 @@ class ProductTile extends StatelessWidget {
       required this.subtitle,
       required this.price,
       required this.oldPrice,
-      required this.rating});
+      required this.rating,
+      required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -36,13 +38,7 @@ class ProductTile extends StatelessWidget {
           child: Stack(
             children: [
               GestureDetector(
-                onTap: () {
-                  if (GetStorageServices.getUserLoggedInStatus() == true) {
-                    Get.to(() => ProductDetailScreen(categoryName: "Women"));
-                  } else {
-                    Get.to(() => SignInScreen());
-                  }
-                },
+                onTap: onTap,
                 child: Container(
                   height: 145.sp,
                   width: 130.sp,
@@ -50,7 +46,7 @@ class ProductTile extends StatelessWidget {
                     color: CommonColor.greyColorF2F2F2,
                     borderRadius: BorderRadius.circular(10),
                     image: DecorationImage(
-                        image: AssetImage(image), fit: BoxFit.cover),
+                        image: NetworkImage(image), fit: BoxFit.cover),
                   ),
                 ),
               ),

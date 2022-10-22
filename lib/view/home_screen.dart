@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:inzoid/components/common_widget.dart';
 import 'package:inzoid/constant/color_const.dart';
@@ -142,14 +143,14 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 CommonText.textBoldWight400(
-                    text: TextConst.kids,
+                    text: TextConst.men,
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w600),
                 InkWell(
                   onTap: () {
                     if (GetStorageServices.getUserLoggedInStatus() == true) {
                       Get.to(() => CategoryScreen(
-                            category: "Kids",
+                            category: "Men",
                           ));
                     } else {
                       Get.to(() => SignInScreen());
@@ -169,21 +170,47 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           SizedBox(
             height: 230.sp,
-            child: ListView.builder(
-              itemCount: 3,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) => ProductTile(
-                image: ImageConst.kids1,
-                title: "Knee Party Dress",
-                subtitle: "Generic",
-                price: "₹799,00",
-                oldPrice: "₹1099,00",
-                rating: "(200 Ratings)",
-              ),
+            child: FutureBuilder(
+              future: FirebaseFirestore.instance
+                  .collection('Admin')
+                  .doc('all_product')
+                  .collection('product_data')
+                  .where('category', isEqualTo: 'Kids')
+                  .orderBy('create_time', descending: true)
+                  .get(),
+              builder: (context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  return ListView.builder(
+                    itemCount: snapshot.data.docs.length,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      var fetchMenData = snapshot.data.docs![index];
+                      print('material  ${fetchMenData['material']}');
+                      return ProductTile(
+                        image: fetchMenData['listOfImage'][0],
+                        title: fetchMenData['productName'],
+                        subtitle: fetchMenData['brand'],
+                        price: fetchMenData['price'],
+                        oldPrice: fetchMenData['oldPrice'],
+                        rating: "(200 Ratings)",
+                        onTap: () {
+                          if (GetStorageServices.getUserLoggedInStatus() ==
+                              true) {
+                            Get.to(() => ProductDetailScreen(
+                                  productData: fetchMenData,
+                                ));
+                          } else {
+                            Get.to(() => SignInScreen());
+                          }
+                        },
+                      );
+                    },
+                  );
+                } else {
+                  return CircularProgressIndicator();
+                }
+              },
             ),
-          ),
-          SizedBox(
-            height: 1.h,
           ),
         ],
       ),
@@ -191,70 +218,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Padding womenProduct() {
-    return Padding(
-      padding: EdgeInsets.only(left: CommonSize.screenPadding),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: 3.h,
-          ),
-          Padding(
-            padding: EdgeInsets.only(right: CommonSize.screenPadding),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CommonText.textBoldWight400(
-                    text: TextConst.women,
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w600),
-                InkWell(
-                  onTap: () {
-                    log('User Logged In Status==>>${GetStorageServices.getUserLoggedInStatus()}');
-                    if (GetStorageServices.getUserLoggedInStatus() == true) {
-                      Get.to(() => CategoryScreen(
-                            category: "Women",
-                          ));
-                    } else {
-                      Get.to(() => SignInScreen());
-                    }
-                  },
-                  child: CommonText.textBoldWight400(
-                      color: themColors309D9D,
-                      text: TextConst.seeAll,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 12.sp),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 10.sp,
-          ),
-          SizedBox(
-            height: 230.sp,
-            child: ListView.builder(
-              itemCount: 3,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) => ProductTile(
-                image: ImageConst.women1,
-                title: "CLAUDETTE CORSET",
-                subtitle: "TMP Company",
-                price: "₹999,00",
-                oldPrice: "₹1299,00",
-                rating: "(200 Ratings)",
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 1.h,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Padding mensProduct() {
     return Padding(
       padding: EdgeInsets.only(left: CommonSize.screenPadding),
       child: Column(
@@ -296,17 +259,133 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           SizedBox(
             height: 230.sp,
-            child: ListView.builder(
-              itemCount: 3,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) => ProductTile(
-                image: ImageConst.men1,
-                title: "HOODED SWEATSHIRT",
-                subtitle: "Alan Jones Clothing",
-                price: "₹699,00",
-                oldPrice: "₹1399,00",
-                rating: "(200 Ratings)",
-              ),
+            child: FutureBuilder(
+              future: FirebaseFirestore.instance
+                  .collection('Admin')
+                  .doc('all_product')
+                  .collection('product_data')
+                  .where('category', isEqualTo: 'Women')
+                  .orderBy('create_time', descending: true)
+                  .get(),
+              builder: (context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  return ListView.builder(
+                    itemCount: snapshot.data.docs.length,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      var fetchMenData = snapshot.data.docs![index];
+                      print('material  ${fetchMenData['material']}');
+                      return ProductTile(
+                          image: fetchMenData['listOfImage'][0],
+                          title: fetchMenData['productName'],
+                          subtitle: fetchMenData['brand'],
+                          price: fetchMenData['price'],
+                          oldPrice: fetchMenData['oldPrice'],
+                          rating: "(200 Ratings)",
+                          onTap: () {
+                            if (GetStorageServices.getUserLoggedInStatus() ==
+                                true) {
+                              Get.to(() => ProductDetailScreen(
+                                    productData: fetchMenData,
+                                  ));
+                            } else {
+                              Get.to(() => SignInScreen());
+                            }
+                          });
+                    },
+                  );
+                } else {
+                  return CircularProgressIndicator();
+                }
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget mensProduct() {
+    return Padding(
+      padding: EdgeInsets.only(left: CommonSize.screenPadding),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: 3.h,
+          ),
+          Padding(
+            padding: EdgeInsets.only(right: CommonSize.screenPadding),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CommonText.textBoldWight400(
+                    text: TextConst.men,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600),
+                InkWell(
+                  onTap: () {
+                    if (GetStorageServices.getUserLoggedInStatus() == true) {
+                      Get.to(() => CategoryScreen(
+                            category: "Men",
+                          ));
+                    } else {
+                      Get.to(() => SignInScreen());
+                    }
+                  },
+                  child: CommonText.textBoldWight400(
+                      color: themColors309D9D,
+                      text: TextConst.seeAll,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12.sp),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 10.sp,
+          ),
+          SizedBox(
+            height: 230.sp,
+            child: FutureBuilder(
+              future: FirebaseFirestore.instance
+                  .collection('Admin')
+                  .doc('all_product')
+                  .collection('product_data')
+                  .where('category', isEqualTo: 'Men')
+                  .orderBy('create_time', descending: true)
+                  .get(),
+              builder: (context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  return ListView.builder(
+                    itemCount: snapshot.data.docs.length,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      var fetchMenData = snapshot.data.docs![index];
+                      print('material  ${fetchMenData['material']}');
+                      return ProductTile(
+                          image: fetchMenData['listOfImage'][0],
+                          title: fetchMenData['productName'],
+                          subtitle: fetchMenData['brand'],
+                          price: fetchMenData['price'],
+                          oldPrice: fetchMenData['oldPrice'],
+                          rating: "(200 Ratings)",
+                          onTap: () {
+                            if (GetStorageServices.getUserLoggedInStatus() ==
+                                true) {
+                              Get.to(() => ProductDetailScreen(
+                                    productData: fetchMenData,
+                                  ));
+                            } else {
+                              Get.to(() => SignInScreen());
+                            }
+                          });
+                    },
+                  );
+                } else {
+                  return CircularProgressIndicator();
+                }
+              },
             ),
           ),
         ],

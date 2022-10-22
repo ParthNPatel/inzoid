@@ -18,4 +18,13 @@ class GetStorageServices {
   static getUserLoggedInStatus() {
     return getStorage.read('isUserLoggedIn');
   }
+
+  /// user uid
+  static setToken(String userUid) {
+    getStorage.write('token', userUid);
+  }
+
+  static getToken() {
+    return getStorage.read('token');
+  }
 }
