@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:inzoid/components/common_widget.dart';
 import 'package:inzoid/constant/color_const.dart';
@@ -9,6 +10,7 @@ import 'package:inzoid/view/sign_in_screen.dart';
 import 'package:sizer/sizer.dart';
 import 'package:get/get.dart';
 
+import '../components/category_shimmer.dart';
 import '../components/product_tile.dart';
 import '../constant/image_const.dart';
 import '../get_storage_services/get_storage_service.dart';
@@ -39,56 +41,56 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   int categorySelected = 0;
 
-  List<Map<String, dynamic>> data = [
-    {
-      'image': ImageConst.women3,
-      'title': 'CLAUDETTE CORSET',
-      'subtitle': 'TMP Company',
-      'price': '₹999,00',
-      'oldPrice': '₹1299,00',
-      'rating': '(200 Ratings)'
-    },
-    {
-      'image': ImageConst.women4,
-      'title': ' Tailored FULL Skirta',
-      'subtitle': 'TMP Company',
-      'price': '₹999,00',
-      'oldPrice': '₹1299,00',
-      'rating': '(200 Ratings)'
-    },
-    {
-      'image': ImageConst.women5,
-      'title': 'CLAUDETTE CORSET',
-      'subtitle': 'TMP Company',
-      'price': '₹999,00',
-      'oldPrice': '₹1299,00',
-      'rating': '(200 Ratings)'
-    },
-    {
-      'image': ImageConst.women6,
-      'title': ' Tailored FULL Skirta',
-      'subtitle': 'TMP Company',
-      'price': '₹999,00',
-      'oldPrice': '₹1299,00',
-      'rating': '(200 Ratings)'
-    },
-    {
-      'image': ImageConst.women7,
-      'title': 'CLAUDETTE CORSET',
-      'subtitle': 'TMP Company',
-      'price': '₹999,00',
-      'oldPrice': '₹1299,00',
-      'rating': '(200 Ratings)'
-    },
-    {
-      'image': ImageConst.women8,
-      'title': ' Tailored FULL Skirta',
-      'subtitle': 'TMP Company',
-      'price': '₹999,00',
-      'oldPrice': '₹1299,00',
-      'rating': '(200 Ratings)'
-    },
-  ];
+  // List<Map<String, dynamic>> data = [
+  //   {
+  //     'image': ImageConst.women3,
+  //     'title': 'CLAUDETTE CORSET',
+  //     'subtitle': 'TMP Company',
+  //     'price': '₹999,00',
+  //     'oldPrice': '₹1299,00',
+  //     'rating': '(200 Ratings)'
+  //   },
+  //   {
+  //     'image': ImageConst.women4,
+  //     'title': ' Tailored FULL Skirta',
+  //     'subtitle': 'TMP Company',
+  //     'price': '₹999,00',
+  //     'oldPrice': '₹1299,00',
+  //     'rating': '(200 Ratings)'
+  //   },
+  //   {
+  //     'image': ImageConst.women5,
+  //     'title': 'CLAUDETTE CORSET',
+  //     'subtitle': 'TMP Company',
+  //     'price': '₹999,00',
+  //     'oldPrice': '₹1299,00',
+  //     'rating': '(200 Ratings)'
+  //   },
+  //   {
+  //     'image': ImageConst.women6,
+  //     'title': ' Tailored FULL Skirta',
+  //     'subtitle': 'TMP Company',
+  //     'price': '₹999,00',
+  //     'oldPrice': '₹1299,00',
+  //     'rating': '(200 Ratings)'
+  //   },
+  //   {
+  //     'image': ImageConst.women7,
+  //     'title': 'CLAUDETTE CORSET',
+  //     'subtitle': 'TMP Company',
+  //     'price': '₹999,00',
+  //     'oldPrice': '₹1299,00',
+  //     'rating': '(200 Ratings)'
+  //   },
+  //   {
+  //     'image': ImageConst.women8,
+  //     'title': ' Tailored FULL Skirta',
+  //     'subtitle': 'TMP Company',
+  //     'price': '₹999,00',
+  //     'oldPrice': '₹1299,00',
+  //     'rating': '(200 Ratings)'
+  //   },
+  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -177,32 +179,63 @@ class _CategoryScreenState extends State<CategoryScreen> {
             SizedBox(
               height: 2.h,
             ),
-            GridView.builder(
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: 6,
-              padding: EdgeInsets.symmetric(horizontal: 4.w),
-              shrinkWrap: true,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 2.sp / 3.7.sp,
-                  crossAxisSpacing: 10),
-              itemBuilder: (context, index) => ProductTile(
-                onTap: () {
-                  if (GetStorageServices.getUserLoggedInStatus() == true) {
-                    Get.to(() => ProductDetailScreen(
-                          productData: '',
-                        ));
+            FutureBuilder(
+              future: FirebaseFirestore.instance
+                  .collection('Admin')
+                  .doc('all_product')
+                  .collection('product_data')
+                  .where('category', isEqualTo: '${widget.category}')
+                  .orderBy('create_time', descending: true)
+                  .get(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  if (snapshot.data.docs.length != 0) {
+                    return GridView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: snapshot.data.docs.length,
+                        padding: EdgeInsets.symmetric(horizontal: 4.w),
+                        shrinkWrap: true,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 2.sp / 3.7.sp,
+                            crossAxisSpacing: 10),
+                        itemBuilder: (context, index) {
+                          var data = snapshot.data.docs[index];
+                          return ProductTile(
+                            onTap: () {
+                              if (GetStorageServices.getUserLoggedInStatus() ==
+                                  true) {
+                                Get.to(() => ProductDetailScreen(
+                                      productData: snapshot.data.docs[index],
+                                    ));
+                              } else {
+                                Get.to(() => SignInScreen());
+                              }
+                            },
+                            image: data['listOfImage'][0],
+                            title: data['productName'],
+                            subtitle: data['brand'],
+                            price: data['price'],
+                            oldPrice: data['oldPrice'],
+                            rating: '(200 Ratings)',
+                          );
+                        });
                   } else {
-                    Get.to(() => SignInScreen());
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 4.h,
+                        ),
+                        CommonText.textBoldWight600(
+                            text: "No Product found of ${widget.category}")
+                      ],
+                    );
                   }
-                },
-                image: data[index]['image'],
-                title: data[index]['title'],
-                subtitle: data[index]['subtitle'],
-                price: data[index]['price'],
-                oldPrice: data[index]['oldPrice'],
-                rating: data[index]['rating'],
-              ),
+                } else {
+                  return CategoryProductShimmer();
+                }
+              },
             ),
           ],
         ),

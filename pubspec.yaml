@@ -47,6 +47,7 @@ dependencies:
   flutter_progress_hud: ^2.0.2
   email_auth: ^1.0.0
   cloud_firestore: ^4.0.2
+  shimmer: ^2.0.0
 
 
 dev_dependencies:
