@@ -9,6 +9,7 @@ import 'package:inzoid/view/sign_in_screen.dart';
 import 'package:sizer/sizer.dart';
 
 import '../get_storage_services/get_storage_service.dart';
+import 'edit_profile_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -188,9 +189,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         Row(
           children: [
-            CircleAvatar(
-              radius: 30.sp,
-              backgroundImage: AssetImage(ImageConst.user),
+            Container(
+              height: 60,
+              width: 60,
+              decoration: BoxDecoration(shape: BoxShape.circle),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(300),
+                child: Image.network(
+                    errorBuilder: (context, error, stackTrace) => CircleAvatar(
+                          minRadius: 26,
+                          maxRadius: 26,
+                          backgroundColor: Colors.grey.withOpacity(0.5),
+                          child: Icon(
+                            Icons.person,
+                            color: Colors.grey,
+                          ),
+                        ),
+                    '${GetStorageServices.getProfileImageValue()}',
+                    fit: BoxFit.cover),
+              ),
             ),
             SizedBox(
               width: 4.w,
@@ -199,15 +216,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CommonText.textBoldWight600(
-                    text: "Naman Sharma", fontSize: 18.sp),
+                    text: "${GetStorageServices.getNameValue() ?? ''}",
+                    fontSize: 18.sp),
                 SizedBox(
                   height: 3.sp,
                 ),
-                CommonText.textBoldWight500(
-                    textDecoration: TextDecoration.underline,
-                    text: "View Profile",
-                    fontSize: 12.sp,
-                    color: themColors309D9D),
+                InkWell(
+                  onTap: () {
+                    Get.to(EditProfileScreen());
+                  },
+                  child: CommonText.textBoldWight500(
+                      textDecoration: TextDecoration.underline,
+                      text: "View Profile",
+                      fontSize: 12.sp,
+                      color: themColors309D9D),
+                ),
               ],
             )
           ],

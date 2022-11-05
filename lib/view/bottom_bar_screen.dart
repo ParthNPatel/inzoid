@@ -6,7 +6,9 @@ import 'package:inzoid/view/home_screen.dart';
 import 'package:inzoid/view/profile_screen.dart';
 
 class BottomNavScreen extends StatefulWidget {
-  BottomNavScreen({Key? key}) : super(key: key);
+  int? index;
+
+  BottomNavScreen({super.key, this.index = 0});
 
   @override
   State<BottomNavScreen> createState() => _BottomNavScreenState();
@@ -28,6 +30,11 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
     Center(child: Text("Favourite")),
     ProfileScreen()
   ];
+  @override
+  void initState() {
+    pageSelected = widget.index!;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

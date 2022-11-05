@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:inzoid/constant/text_const.dart';
 import 'package:inzoid/view/bottom_bar_screen.dart';
+import 'package:inzoid/view/edit_profile_screen.dart';
 import 'package:sizer/sizer.dart';
 import 'controller/filter_screen_controller.dart';
 
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         initialBinding: BaseBindings(),
         title: 'Inzoid',
         theme: ThemeData(fontFamily: TextConst.fontFamily),
+        // home: EditProfileScreen(),
         home: BottomNavScreen(),
       ),
     );
