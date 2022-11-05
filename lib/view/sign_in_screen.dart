@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import 'package:get/get.dart';
+import 'package:inzoid/components/common_method.dart';
 import 'package:inzoid/components/common_widget.dart';
 import 'package:inzoid/constant/color_const.dart';
 import 'package:inzoid/constant/const_size.dart';
@@ -11,6 +12,8 @@ import 'package:inzoid/constant/text_styel.dart';
 import 'package:inzoid/view/reset_password_screen.dart';
 import 'package:inzoid/view/verification_screen.dart';
 import 'package:sizer/sizer.dart';
+
+import '../get_storage_services/get_storage_service.dart';
 
 enum MobileVerificationState {
   SHOW_MOBILE_FORM_STATE,
@@ -239,6 +242,14 @@ class _SignInScreenState extends State<SignInScreen> {
                 emailOrPhoneText: _emailController.text.trim(),
               ));
             });
+
+            GetStorageServices.setEmail(_emailController.text.trim());
+
+            GetStorageServices.setIsEmailOrPhone(true);
+
+            GetStorageServices.setToken(FirebaseAuth.instance.currentUser!.uid);
+            CommonMethod.likeFiledAdd(context);
+
             progress.dismiss();
           } else {
             progress.dismiss();

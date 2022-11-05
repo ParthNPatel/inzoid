@@ -263,7 +263,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: () {
                     if (GetStorageServices.getUserLoggedInStatus() == true) {
                       Get.to(() => CategoryScreen(
-                            category: "Men",
+                            category: "Women",
                           ));
                     } else {
                       Get.to(() => SignInScreen());
