@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:inzoid/components/common_method.dart';
 import 'package:inzoid/constant/text_const.dart';
 import 'package:inzoid/view/update_password_screen.dart';
 import 'package:otp_text_field/otp_field_style.dart';
@@ -159,7 +160,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                                 GetStorageServices.setToken(
                                     widget.emailOrPhoneText);
                                 GetStorageServices.setUserLoggedIn();
-                                Get.offAll(() => BottomNavScreen());
+                                //Get.offAll(() => BottomNavScreen());
                               } else {
                                 CommonWidget.getSnackBar(
                                     title: TextConst.failed,
@@ -177,6 +178,12 @@ class _VerificationScreenState extends State<VerificationScreen> {
                                   phoneAuthCredential: phoneAuthCredential,
                                   progress: progress);
                             }
+
+                            GetStorageServices.setIsEmailOrPhone(false);
+                            GetStorageServices.setToken(
+                                FirebaseAuth.instance.currentUser!.uid);
+                            await CommonMethod.likeFiledAdd(context);
+
                             // Get.to(() => UpdatePasswordScreen());
                           } else {
                             CommonWidget.getSnackBar(

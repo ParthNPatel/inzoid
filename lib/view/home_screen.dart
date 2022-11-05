@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:inzoid/components/common_widget.dart';
@@ -10,13 +9,14 @@ import 'package:inzoid/view/product_detail_screen.dart';
 import 'package:inzoid/view/sign_in_screen.dart';
 import 'package:sizer/sizer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import '../components/category_shimmer.dart';
 import '../components/favourite_button.dart';
+import '../components/product_shimmer.dart';
 import '../components/product_tile.dart';
 import '../constant/const_size.dart';
 import '../constant/image_const.dart';
 import '../constant/text_styel.dart';
 import 'package:get/get.dart';
-
 import '../get_storage_services/get_storage_service.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -33,13 +33,13 @@ class _HomeScreenState extends State<HomeScreen> {
   //   {'image': ImageConst.sportsWear, 'title': "Sport Wear"},
   // ];
 
-  List<Map<String, dynamic>> categories = [
-    {'image': ImageConst.deal2, 'title': "Deal"},
-    {'image': ImageConst.men2, 'title': "Men"},
-    {'image': ImageConst.women2, 'title': "Women"},
-    {'image': ImageConst.kids2, 'title': "Kids"},
-    {'image': ImageConst.sportsWear2, 'title': "Sport Wear"},
-  ];
+  // List<Map<String, dynamic>> categories = [
+  //   {'image': ImageConst.deal2, 'title': "Deal"},
+  //   {'image': ImageConst.men2, 'title': "Men"},
+  //   {'image': ImageConst.women2, 'title': "Women"},
+  //   {'image': ImageConst.kids2, 'title': "Kids"},
+  //   {'image': ImageConst.sportsWear2, 'title': "Sport Wear"},
+  // ];
 
   List<Map<String, dynamic>> brandManiaList = [
     {'image': ImageConst.jiniJony, 'logo': ImageConst.jiniJonyLogo},
@@ -60,59 +60,83 @@ class _HomeScreenState extends State<HomeScreen> {
               color: blueColor,
               child: Column(
                 children: [
-                  Padding(
-                      padding: EdgeInsets.only(top: 25, bottom: 13),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(
-                          categories.length,
-                          (index) => Column(
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  Get.to(
-                                    () => CategoryScreen(
-                                      category: categories[index]['title'],
-                                    ),
-                                  );
-                                },
-                                child: Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 5),
-                                  height: 55.sp,
-                                  width: 45.sp,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(
-                                        color: Colors.black, width: 1),
-                                  ),
-                                  child: Center(
+                  FutureBuilder(
+                    future: FirebaseFirestore.instance
+                        .collection('Admin')
+                        .doc('categories')
+                        .collection('categories_list')
+                        .get(),
+                    builder: (BuildContext context, AsyncSnapshot data) {
+                      log('Connection${data.hasData}');
+                      if (data.hasData) {
+                        return SizedBox(
+                          height: 100.sp,
+                          child: ListView.builder(
+                            padding: EdgeInsets.only(left: 4.w, top: 2.h),
+                            itemCount: data.data.docs.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              var categories = data.data.docs;
+
+                              log('DATA==>${data}');
+                              return Column(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      Get.to(
+                                        () => CategoryScreen(
+                                          category: categories[index]
+                                              ['category_name'],
+                                        ),
+                                      );
+                                    },
                                     child: Container(
                                       margin:
-                                          EdgeInsets.symmetric(horizontal: 3),
-                                      height: 50.sp,
-                                      width: 48.sp,
+                                          EdgeInsets.symmetric(horizontal: 5),
+                                      height: 55.sp,
+                                      width: 45.sp,
                                       decoration: BoxDecoration(
-                                        color: Colors.grey,
-                                        borderRadius: BorderRadius.circular(7),
-                                        image: DecorationImage(
-                                            image: AssetImage(
-                                                categories[index]['image']),
-                                            fit: BoxFit.cover),
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                            color: Colors.black, width: 1),
+                                      ),
+                                      child: Center(
+                                        child: Container(
+                                          margin: EdgeInsets.symmetric(
+                                              horizontal: 3),
+                                          height: 50.sp,
+                                          width: 48.sp,
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey,
+                                            borderRadius:
+                                                BorderRadius.circular(7),
+                                            image: DecorationImage(
+                                                image: NetworkImage(categories[
+                                                            index]
+                                                        ['category_image'][0]
+                                                    .toString()),
+                                                fit: BoxFit.cover),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 3.sp,
-                              ),
-                              CommonText.textBoldWight400(
-                                text: categories[index]['title'],
-                              ),
-                            ],
+                                  SizedBox(
+                                    height: 3.sp,
+                                  ),
+                                  CommonText.textBoldWight400(
+                                    text: categories[index]['category_name'],
+                                  ),
+                                ],
+                              );
+                            },
                           ),
-                        ),
-                      )),
+                        );
+                      } else {
+                        return CategoryShimmer();
+                      }
+                    },
+                  ),
                   //categoriesWidget(),
                   bannerWidget(),
                   brandMania(),
@@ -143,14 +167,14 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 CommonText.textBoldWight400(
-                    text: TextConst.men,
+                    text: TextConst.kids,
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w600),
                 InkWell(
                   onTap: () {
                     if (GetStorageServices.getUserLoggedInStatus() == true) {
                       Get.to(() => CategoryScreen(
-                            category: "Men",
+                            category: "Kids",
                           ));
                     } else {
                       Get.to(() => SignInScreen());
@@ -207,7 +231,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   );
                 } else {
-                  return CircularProgressIndicator();
+                  return ProductShimmer();
                 }
               },
             ),
@@ -232,14 +256,14 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 CommonText.textBoldWight400(
-                    text: TextConst.men,
+                    text: TextConst.women,
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w600),
                 InkWell(
                   onTap: () {
                     if (GetStorageServices.getUserLoggedInStatus() == true) {
                       Get.to(() => CategoryScreen(
-                            category: "Men",
+                            category: "Women",
                           ));
                     } else {
                       Get.to(() => SignInScreen());
@@ -295,7 +319,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   );
                 } else {
-                  return CircularProgressIndicator();
+                  return ProductShimmer();
                 }
               },
             ),
@@ -383,7 +407,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   );
                 } else {
-                  return CircularProgressIndicator();
+                  return ProductShimmer();
                 }
               },
             ),
@@ -468,143 +492,160 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Container bannerWidget() {
-    return Container(
-      color: Colors.white,
-      child: Padding(
-        padding: EdgeInsets.only(left: CommonSize.screenPadding, top: 10),
-        child: Column(
-          children: [
-            SizedBox(
-              height: 140.sp,
-              child: PageView.builder(
-                  itemCount: 3,
-                  onPageChanged: (value) {
-                    setState(() {
-                      pageSelected = value;
-                    });
-                  },
-                  itemBuilder: (context, index) => Container(
-                        margin: EdgeInsets.only(right: 6.w),
-                        //height: 150.sp,
-                        // width: 100.sp,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          image: DecorationImage(
-                              image: AssetImage(ImageConst.banner),
-                              fit: BoxFit.cover),
-                        ),
-                      )),
+  Widget bannerWidget() {
+    return FutureBuilder(
+      future: FirebaseFirestore.instance
+          .collection('Admin')
+          .doc('banners')
+          .collection('banner_list')
+          .get(),
+      builder: (context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData) {
+          return Container(
+            color: Colors.white,
+            child: Padding(
+              padding: EdgeInsets.only(left: CommonSize.screenPadding, top: 10),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 140.sp,
+                    child: PageView.builder(
+                        itemCount: snapshot.data.docs.length,
+                        onPageChanged: (value) {
+                          setState(() {
+                            pageSelected = value;
+                          });
+                        },
+                        itemBuilder: (context, index) {
+                          var banners = snapshot.data.docs[index];
+                          return Container(
+                            margin: EdgeInsets.only(right: 6.w),
+                            //height: 150.sp,
+                            // width: 100.sp,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              image: DecorationImage(
+                                  image:
+                                      NetworkImage(banners['banner_image'][0]),
+                                  fit: BoxFit.cover),
+                            ),
+                          );
+                        }),
+                  ),
+                  SizedBox(
+                    height: 3.h,
+                  ),
+                  AnimatedSmoothIndicator(
+                    activeIndex: pageSelected,
+                    count: snapshot.data.docs.length,
+                    effect: WormEffect(
+                        spacing: 4,
+                        dotWidth: 7.0,
+                        dotHeight: 7.0,
+                        dotColor: CommonColor.greyColorD9D9D9,
+                        activeDotColor: themColors309D9D),
+                  ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: List.generate(
+                  //       3,
+                  //       (index) => Padding(
+                  //             padding: const EdgeInsets.symmetric(horizontal: 3),
+                  //             child: GestureDetector(
+                  //               onTap: () {
+                  //                 setState(() {
+                  //                   pageSelected = index;
+                  //                 });
+                  //               },
+                  //               child: CircleAvatar(
+                  //                 radius: 3.5,
+                  //                 backgroundColor: pageSelected == index
+                  //                     ? themColors309D9D
+                  //                     : CommonColor.greyColorD9D9D9,
+                  //               ),
+                  //             ),
+                  //           )),
+                  // ),
+                  SizedBox(
+                    height: 4.h,
+                  ),
+                ],
+              ),
             ),
-            SizedBox(
-              height: 3.h,
-            ),
-            AnimatedSmoothIndicator(
-              activeIndex: pageSelected,
-              count: 3,
-              effect: WormEffect(
-                  spacing: 4,
-                  dotWidth: 7.0,
-                  dotHeight: 7.0,
-                  dotColor: CommonColor.greyColorD9D9D9,
-                  activeDotColor: themColors309D9D),
-            ),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.center,
-            //   children: List.generate(
-            //       3,
-            //       (index) => Padding(
-            //             padding: const EdgeInsets.symmetric(horizontal: 3),
-            //             child: GestureDetector(
-            //               onTap: () {
-            //                 setState(() {
-            //                   pageSelected = index;
-            //                 });
-            //               },
-            //               child: CircleAvatar(
-            //                 radius: 3.5,
-            //                 backgroundColor: pageSelected == index
-            //                     ? themColors309D9D
-            //                     : CommonColor.greyColorD9D9D9,
-            //               ),
-            //             ),
-            //           )),
-            // ),
-            SizedBox(
-              height: 4.h,
-            ),
-          ],
-        ),
-      ),
+          );
+        } else {
+          return BannerShimmer();
+        }
+      },
     );
   }
 
-  Padding categoriesWidget() {
-    return Padding(
-      padding: EdgeInsets.only(left: CommonSize.screenPadding, top: 30),
-      child: Container(
-        color: blueColor,
-        child: Column(
-          children: [
-            Padding(
-                padding: EdgeInsets.only(top: 25, bottom: 13),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(
-                    categories.length,
-                    (index) => Column(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            Get.to(
-                              () => CategoryScreen(
-                                category: categories[index]['title'],
-                              ),
-                            );
-                          },
-                          child: Container(
-                            margin: EdgeInsets.symmetric(horizontal: 5),
-                            height: 55.sp,
-                            width: 45.sp,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: Colors.black, width: 1),
-                            ),
-                            child: Center(
-                              child: Container(
-                                margin: EdgeInsets.symmetric(horizontal: 3),
-                                height: 50.sp,
-                                width: 48.sp,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey,
-                                  borderRadius: BorderRadius.circular(7),
-                                  image: DecorationImage(
-                                      image: AssetImage(
-                                          categories[index]['image']),
-                                      fit: BoxFit.cover),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 3.sp,
-                        ),
-                        CommonText.textBoldWight400(
-                          text: categories[index]['title'],
-                        ),
-                      ],
-                    ),
-                  ),
-                )),
-            //categoriesWidget(),
-            bannerWidget(),
-            brandMania(),
-          ],
-        ),
-      ),
-    );
-  }
+  // Padding categoriesWidget() {
+  //   return Padding(
+  //     padding: EdgeInsets.only(left: CommonSize.screenPadding, top: 30),
+  //     child: Container(
+  //       color: blueColor,
+  //       child: Column(
+  //         children: [
+  //           Padding(
+  //               padding: EdgeInsets.only(top: 25, bottom: 13),
+  //               child: Row(
+  //                 mainAxisAlignment: MainAxisAlignment.center,
+  //                 children: List.generate(
+  //                   categories.length,
+  //                   (index) => Column(
+  //                     children: [
+  //                       GestureDetector(
+  //                         onTap: () {
+  //                           Get.to(
+  //                             () => CategoryScreen(
+  //                               category: categories[index]['title'],
+  //                             ),
+  //                           );
+  //                         },
+  //                         child: Container(
+  //                           margin: EdgeInsets.symmetric(horizontal: 5),
+  //                           height: 55.sp,
+  //                           width: 45.sp,
+  //                           decoration: BoxDecoration(
+  //                             borderRadius: BorderRadius.circular(10),
+  //                             border: Border.all(color: Colors.black, width: 1),
+  //                           ),
+  //                           child: Center(
+  //                             child: Container(
+  //                               margin: EdgeInsets.symmetric(horizontal: 3),
+  //                               height: 50.sp,
+  //                               width: 48.sp,
+  //                               decoration: BoxDecoration(
+  //                                 color: Colors.grey,
+  //                                 borderRadius: BorderRadius.circular(7),
+  //                                 image: DecorationImage(
+  //                                     image: AssetImage(
+  //                                         categories[index]['image']),
+  //                                     fit: BoxFit.cover),
+  //                               ),
+  //                             ),
+  //                           ),
+  //                         ),
+  //                       ),
+  //                       SizedBox(
+  //                         height: 3.sp,
+  //                       ),
+  //                       CommonText.textBoldWight400(
+  //                         text: categories[index]['title'],
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 ),
+  //               )),
+  //           //categoriesWidget(),
+  //           bannerWidget(),
+  //           brandMania(),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   AppBar appBar() {
     return AppBar(

@@ -46,7 +46,10 @@ dependencies:
   firebase_core: ^2.0.0
   flutter_progress_hud: ^2.0.2
   email_auth: ^1.0.0
-  cloud_firestore: ^4.0.2
+  cloud_firestore: ^4.0.3
+  shimmer: ^2.0.0
+  firebase_storage: ^11.0.3
+  image_picker: ^0.8.6
 
 
 dev_dependencies:
