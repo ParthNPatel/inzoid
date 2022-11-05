@@ -60,7 +60,7 @@ class CommonWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          CommonText.textBoldWight500(
+          CommonText.textBoldWight600(
               text: text, color: Colors.white, fontSize: 12.sp)
         ]),
       ),
