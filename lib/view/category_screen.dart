@@ -41,57 +41,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   int categorySelected = 0;
 
-  // List<Map<String, dynamic>> data = [
-  //   {
-  //     'image': ImageConst.women3,
-  //     'title': 'CLAUDETTE CORSET',
-  //     'subtitle': 'TMP Company',
-  //     'price': '₹999,00',
-  //     'oldPrice': '₹1299,00',
-  //     'rating': '(200 Ratings)'
-  //   },
-  //   {
-  //     'image': ImageConst.women4,
-  //     'title': ' Tailored FULL Skirta',
-  //     'subtitle': 'TMP Company',
-  //     'price': '₹999,00',
-  //     'oldPrice': '₹1299,00',
-  //     'rating': '(200 Ratings)'
-  //   },
-  //   {
-  //     'image': ImageConst.women5,
-  //     'title': 'CLAUDETTE CORSET',
-  //     'subtitle': 'TMP Company',
-  //     'price': '₹999,00',
-  //     'oldPrice': '₹1299,00',
-  //     'rating': '(200 Ratings)'
-  //   },
-  //   {
-  //     'image': ImageConst.women6,
-  //     'title': ' Tailored FULL Skirta',
-  //     'subtitle': 'TMP Company',
-  //     'price': '₹999,00',
-  //     'oldPrice': '₹1299,00',
-  //     'rating': '(200 Ratings)'
-  //   },
-  //   {
-  //     'image': ImageConst.women7,
-  //     'title': 'CLAUDETTE CORSET',
-  //     'subtitle': 'TMP Company',
-  //     'price': '₹999,00',
-  //     'oldPrice': '₹1299,00',
-  //     'rating': '(200 Ratings)'
-  //   },
-  //   {
-  //     'image': ImageConst.women8,
-  //     'title': ' Tailored FULL Skirta',
-  //     'subtitle': 'TMP Company',
-  //     'price': '₹999,00',
-  //     'oldPrice': '₹1299,00',
-  //     'rating': '(200 Ratings)'
-  //   },
-  // ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -218,6 +167,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             price: data['price'],
                             oldPrice: data['oldPrice'],
                             rating: '(200 Ratings)',
+                            productID: int.parse(data['productId']),
                           );
                         });
                   } else {

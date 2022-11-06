@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:inzoid/constant/color_const.dart';
 import 'package:inzoid/constant/image_const.dart';
 import 'package:inzoid/view/home_screen.dart';
 import 'package:inzoid/view/profile_screen.dart';
+import 'package:inzoid/view/sign_in_screen.dart';
+
+import '../get_storage_services/get_storage_service.dart';
+import 'my_wish_list_page.dart';
 
 class BottomNavScreen extends StatefulWidget {
   int? index;
@@ -27,7 +32,7 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
   List<Widget> screens = [
     HomeScreen(),
     Center(child: Text("Notifications")),
-    Center(child: Text("Favourite")),
+    MyWishListPage(),
     ProfileScreen()
   ];
   @override
@@ -44,7 +49,7 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
           : pageSelected == 1
               ? Center(child: Text("Notifications"))
               : pageSelected == 2
-                  ? Center(child: Text("Favourite"))
+                  ? MyWishListPage()
                   : ProfileScreen(),
       // if (pageSelected == 0) HomeScreen(),
       // if (pageSelected == 1) Center(child: Text("Notifications")),
@@ -63,8 +68,13 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
                   splashColor: Colors.transparent,
                   highlightColor: Colors.transparent,
                   onTap: () {
-                    pageSelected = index;
-                    setState(() {});
+                    if (GetStorageServices.getUserLoggedInStatus() == true ||
+                        index == 0) {
+                      pageSelected = index;
+                      setState(() {});
+                    } else {
+                      Get.to(() => SignInScreen());
+                    }
                   },
                   child: Column(
                       mainAxisSize: MainAxisSize.min,

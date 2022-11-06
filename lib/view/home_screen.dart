@@ -211,6 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       var fetchMenData = snapshot.data.docs![index];
                       print('material  ${fetchMenData['material']}');
                       return ProductTile(
+                        productID: int.parse(fetchMenData['productId']),
                         image: fetchMenData['listOfImage'][0],
                         title: fetchMenData['productName'],
                         subtitle: fetchMenData['brand'],
@@ -300,6 +301,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       var fetchMenData = snapshot.data.docs![index];
                       print('material  ${fetchMenData['material']}');
                       return ProductTile(
+                          productID: int.parse(fetchMenData['productId']),
                           image: fetchMenData['listOfImage'][0],
                           title: fetchMenData['productName'],
                           subtitle: fetchMenData['brand'],
@@ -388,6 +390,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       var fetchMenData = snapshot.data.docs![index];
                       print('material  ${fetchMenData['material']}');
                       return ProductTile(
+                          productID: int.parse(fetchMenData['productId']),
                           image: fetchMenData['listOfImage'][0],
                           title: fetchMenData['productName'],
                           subtitle: fetchMenData['brand'],

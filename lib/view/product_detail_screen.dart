@@ -11,7 +11,6 @@ import '../constant/const_size.dart';
 import '../constant/image_const.dart';
 import '../constant/text_const.dart';
 import '../constant/text_styel.dart';
-import '../controller/filter_screen_controller.dart';
 import '../get_storage_services/get_storage_service.dart';
 
 class ProductDetailScreen extends StatefulWidget {
@@ -69,6 +68,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       'rating': '(200 Ratings)'
     },
   ];
+  bool isContainCheck = false;
 
   @override
   Widget build(BuildContext context) {
@@ -76,23 +76,59 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0.7,
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: IconButton(
-            onPressed: () {
-              Get.back();
-            },
-            icon: Icon(
-              Icons.arrow_back_ios,
-              size: 18.sp,
-              color: Colors.black,
-            ),
-          ),
-        ),
+        leading: bacButtonWidget(),
         centerTitle: true,
         title: CommonText.textBoldWight700(
             text: widget.productData['category'], color: Colors.black),
         actions: [
+          Container(
+            margin: const EdgeInsets.only(right: 10.0),
+            child: FutureBuilder(
+              builder: (context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  try {
+                    print('like not goo  ${widget.productData['productId']}');
+                    isContainCheck = snapshot.data['list_of_like']
+                        .contains(int.parse(widget.productData['productId']));
+                    print(
+                        'list_of_like  ${snapshot.data['list_of_like'].contains(widget.productData['productId'])}');
+                  } catch (e) {
+                    isContainCheck = false;
+                  }
+
+                  return GestureDetector(
+                    onTap: () {
+                      likeUnLike(
+                          productId:
+                              int.parse(widget.productData['productId']));
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          color: Colors.white),
+                      height: 30,
+                      width: 30,
+                      child: Center(
+                        child: likeWidget(snapshot),
+                      ),
+                    ),
+                  );
+                } else {
+                  return Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: Colors.white),
+                    height: 30,
+                    width: 30,
+                  );
+                }
+              },
+              future: FirebaseFirestore.instance
+                  .collection('All_User_Details')
+                  .doc(GetStorageServices.getToken())
+                  .get(),
+            ),
+          ),
           InkResponse(
             onTap: () {},
             child: SvgPicture.asset(
@@ -306,6 +342,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         .collection('product_data')
                         .where('category',
                             isEqualTo: '${widget.productData['category']}')
+                        // .where('productId',
+                        //     isNotEqualTo: '${widget.productData['productId']}')
                         .orderBy('create_time', descending: true)
                         .limit(10)
                         .get(),
@@ -350,6 +388,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               price: fetchMenData['price'],
                               oldPrice: fetchMenData['oldPrice'],
                               rating: "(200 Ratings)",
+                              productID: int.parse(fetchMenData['productId']),
                             );
                           },
                         );
@@ -377,6 +416,75 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ),
             CommonWidget.commonSizedBox(height: 30),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget likeWidget(AsyncSnapshot<dynamic> snapshot) {
+    try {
+      return snapshot.data['list_of_like']
+              .contains(int.parse(widget.productData['productId']))
+          ? Image.asset(
+              color: Colors.red,
+              'assets/image/favorite.png',
+              height: 20,
+              width: 20,
+            )
+          : CommonWidget.commonSvgPitcher(
+              image: 'assets/image/favourite.svg', height: 20, width: 20);
+    } catch (e) {
+      //'assets/image/favourite.svg',
+      return CommonWidget.commonSvgPitcher(
+          image: 'assets/image/favourite.svg', height: 20, width: 20);
+    }
+  }
+
+  likeUnLike({required int productId}) async {
+    final equipmentCollection = FirebaseFirestore.instance
+        .collection("All_User_Details")
+        .doc(GetStorageServices.getToken());
+
+    final docSnap = await equipmentCollection.get();
+    List queue;
+    try {
+      queue = docSnap.get('list_of_like');
+    } catch (e) {
+      await FirebaseFirestore.instance
+          .collection("All_User_Details")
+          .doc(GetStorageServices.getToken())
+          .set({"list_of_like": []});
+      queue = docSnap.get('list_of_like');
+    }
+    if (queue.contains(productId) == true) {
+      equipmentCollection.update({
+        "list_of_like": FieldValue.arrayRemove([productId])
+      }).then((value) {
+        setState(() {
+          isContainCheck = false;
+        });
+      });
+    } else {
+      equipmentCollection.update({
+        "list_of_like": FieldValue.arrayUnion([productId])
+      }).then((value) {
+        isContainCheck = true;
+      });
+    }
+    setState(() {});
+  }
+
+  Padding bacButtonWidget() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: IconButton(
+        onPressed: () {
+          Get.back();
+        },
+        icon: Icon(
+          Icons.arrow_back_ios,
+          size: 18.sp,
+          color: Colors.black,
         ),
       ),
     );
