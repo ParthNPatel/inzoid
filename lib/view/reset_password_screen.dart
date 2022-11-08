@@ -54,12 +54,12 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   color: CommonColor.greyColor838589),
               CommonWidget.commonSizedBox(height: 30),
               CommonText.textBoldWight400(
-                  text: TextConst.emailPhone,
+                  text: TextConst.email,
                   fontSize: 12.sp,
                   color: CommonColor.blackColor0C1A30),
               CommonWidget.commonSizedBox(height: 14),
               CommonWidget.textFormField(
-                  controller: _emailController, hintText: TextConst.emailPhone),
+                  controller: _emailController, hintText: TextConst.email),
               CommonWidget.commonSizedBox(height: 40),
               CommonWidget.commonButton(
                   onTap: () {

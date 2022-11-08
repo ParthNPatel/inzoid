@@ -19,6 +19,7 @@ class CommonWidget {
       int? maxLength,
       TextInputType? keyBoardType,
       bool isObscured = false,
+      Widget? prefix,
       Widget? suffix}) {
     return SizedBox(
       height: 43.sp,
@@ -34,6 +35,7 @@ class CommonWidget {
         ),
         cursorColor: Colors.black,
         decoration: InputDecoration(
+            prefixIcon: prefix,
             contentPadding: EdgeInsets.only(top: 7.sp, left: 12.sp),
             suffixIcon: suffix,
             filled: true,

@@ -1,3 +1,4 @@
+import 'package:country_picker/country_picker.dart';
 import 'package:email_auth/email_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -28,8 +29,7 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passWordController = TextEditingController();
+  TextEditingController _emailMobileController = TextEditingController();
   FirebaseAuth _auth = FirebaseAuth.instance;
   EmailAuth? emailAuth;
 
@@ -38,6 +38,9 @@ class _SignInScreenState extends State<SignInScreen> {
   bool isObscured = true;
   String? verificationId;
   bool? emailValid;
+  bool isChecked = false;
+  Country? selectedCountry;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,37 +69,105 @@ class _SignInScreenState extends State<SignInScreen> {
                           color: CommonColor.themColor309D9D),
                       CommonWidget.commonSizedBox(height: 30),
                       CommonText.textBoldWight400(
-                          text: TextConst.emailPhone,
+                          text: isChecked ? TextConst.email : TextConst.mobile,
                           fontSize: 12.sp,
                           color: CommonColor.blackColor0C1A30),
                       CommonWidget.commonSizedBox(height: 14),
-                      CommonWidget.textFormField(
-                          controller: _emailController,
-                          hintText: TextConst.email),
-                      CommonWidget.commonSizedBox(height: 26),
-                      CommonText.textBoldWight400(
-                          text: TextConst.password,
-                          fontSize: 12.sp,
-                          color: CommonColor.blackColor0C1A30),
-                      CommonWidget.commonSizedBox(height: 14),
-                      CommonWidget.textFormField(
-                          isObscured: isObscured,
-                          controller: _passWordController,
-                          hintText: TextConst.password,
-                          suffix: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  isObscured = !isObscured;
-                                });
-                              },
-                              child: Icon(
-                                isObscured
-                                    ? Icons.remove_red_eye_outlined
-                                    : Icons.visibility_off_outlined,
-                                color: CommonColor.greyColor838589,
-                                //size: 10,
-                              ))),
+                      isChecked == true
+                          ? CommonWidget.textFormField(
+                              controller: _emailMobileController,
+                              hintText: TextConst.email)
+                          : CommonWidget.textFormField(
+                              prefix: SizedBox(
+                                width: 30.sp,
+                                child: InkWell(
+                                  onTap: () {
+                                    // _displayDialog(context);
+                                    showCountryPicker(
+                                      context: context,
+                                      showPhoneCode:
+                                          true, // optional. Shows phone code before the country name.
+                                      onSelect: (Country country) {
+                                        print(
+                                            'Select country: ${country.displayName}');
+                                        setState(() {
+                                          selectedCountry = country;
+                                        });
+                                      },
+                                    );
+                                  },
+                                  child: Container(
+                                      margin: const EdgeInsets.fromLTRB(
+                                          0.0, 0.0, 0.0, 0.0),
+                                      alignment: Alignment.center,
+                                      height: 50.0,
+                                      width: 100,
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Text(
+                                            selectedCountry != null
+                                                ? "+ ${selectedCountry!.phoneCode}"
+                                                : "+91",
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                            ),
+                                          )
+                                        ],
+                                      )),
+                                ),
+                              ),
+                              keyBoardType: TextInputType.number,
+                              controller: _emailMobileController,
+                              hintText: TextConst.mobile),
                       CommonWidget.commonSizedBox(height: 8),
+                      Row(
+                        children: [
+                          SizedBox(
+                            height: 45,
+                            width: 45,
+                            child: FittedBox(
+                              child: Checkbox(
+                                value: isChecked,
+                                activeColor: CommonColor.themColor309D9D,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isChecked = value!;
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+                          CommonText.textBoldWight500(
+                              text: "Continue with Mobile No")
+                        ],
+                      ),
+
+                      // CommonText.textBoldWight400(
+                      //     text: TextConst.password,
+                      //     fontSize: 12.sp,
+                      //     color: CommonColor.blackColor0C1A30),
+                      // CommonWidget.commonSizedBox(height: 14),
+                      // CommonWidget.textFormField(
+                      //     isObscured: isObscured,
+                      //     controller: _passWordController,
+                      //     hintText: TextConst.password,
+                      //     suffix: GestureDetector(
+                      //         onTap: () {
+                      //           setState(() {
+                      //             isObscured = !isObscured;
+                      //           });
+                      //         },
+                      //         child: Icon(
+                      //           isObscured
+                      //               ? Icons.remove_red_eye_outlined
+                      //               : Icons.visibility_off_outlined,
+                      //           color: CommonColor.greyColor838589,
+                      //           //size: 10,
+                      //         ))),
+                      // CommonWidget.commonSizedBox(height: 8),
                       GestureDetector(
                         onTap: () {
                           Get.to(() => ResetPasswordScreen());
@@ -111,15 +182,8 @@ class _SignInScreenState extends State<SignInScreen> {
                       CommonWidget.commonSizedBox(height: 40),
                       CommonWidget.commonButton(
                           onTap: () {
-                            if (_emailController.text
-                                    .isNotEmpty /* &&
-                        _passWordController.text.isNotEmpty*/
-                                ) {
-                              emailValid = RegExp(
-                                      r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
-                                  .hasMatch(_emailController.text);
-
-                              if (emailValid == true) {
+                            if (_emailMobileController.text.isNotEmpty) {
+                              if (isChecked) {
                                 emailAuth = new EmailAuth(
                                   sessionName: "Sample session",
                                 );
@@ -137,7 +201,9 @@ class _SignInScreenState extends State<SignInScreen> {
                                   title: TextConst.failed,
                                   color: CommonColor.red,
                                   duration: 2,
-                                  message: TextConst.canNotBeEmpty);
+                                  message: isChecked
+                                      ? TextConst.emailCanNotBeEmpty
+                                      : TextConst.mobileCanNotBeEmpty);
                             }
                           },
                           text: TextConst.signIn),
@@ -173,11 +239,11 @@ class _SignInScreenState extends State<SignInScreen> {
     final progress,
   ) async {
     try {
-      if (_emailController.text.length == 10) {
+      if (_emailMobileController.text.length == 10) {
         progress.show();
 
         await _auth.verifyPhoneNumber(
-          phoneNumber: '+91' + _emailController.text,
+          phoneNumber: '+91' + _emailMobileController.text,
           verificationCompleted: (phoneAuthCredential) async {
             progress.dismiss();
           },
@@ -200,7 +266,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
               Get.to(VerificationScreen(
                 isEmail: false,
-                emailOrPhoneText: '+91' + _emailController.text,
+                emailOrPhoneText: '+91' + _emailMobileController.text,
                 verificationId: verificationId,
               ));
               progress.dismiss();
@@ -228,22 +294,23 @@ class _SignInScreenState extends State<SignInScreen> {
     final progress,
   ) async {
     try {
-      if (_emailController.text.isNotEmpty) {
+      if (_emailMobileController.text.isNotEmpty) {
         if (emailValid == true) {
           progress!.show();
           bool result = await emailAuth!.sendOtp(
-              recipientMail: _emailController.value.text.trim(), otpLength: 6);
+              recipientMail: _emailMobileController.value.text.trim(),
+              otpLength: 6);
           if (result) {
             // showBottomEmailSheet();
             Future.delayed(Duration(milliseconds: 500), () {
               Get.to(VerificationScreen(
                 isEmail: true,
                 verificationId: '',
-                emailOrPhoneText: _emailController.text.trim(),
+                emailOrPhoneText: _emailMobileController.text.trim(),
               ));
             });
 
-            GetStorageServices.setEmail(_emailController.text.trim());
+            GetStorageServices.setEmail(_emailMobileController.text.trim());
 
             GetStorageServices.setIsEmailOrPhone(true);
 
