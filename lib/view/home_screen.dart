@@ -41,11 +41,11 @@ class _HomeScreenState extends State<HomeScreen> {
   //   {'image': ImageConst.sportsWear2, 'title': "Sport Wear"},
   // ];
 
-  List<Map<String, dynamic>> brandManiaList = [
-    {'image': ImageConst.jiniJony, 'logo': ImageConst.jiniJonyLogo},
-    {'image': ImageConst.hm, 'logo': ImageConst.hmLogo},
-    {'image': ImageConst.gucci, 'logo': ImageConst.gucciLogo},
-  ];
+  // List<Map<String, dynamic>> brandManiaList = [
+  //   {'image': ImageConst.jiniJony, 'logo': ImageConst.jiniJonyLogo},
+  //   {'image': ImageConst.hm, 'logo': ImageConst.hmLogo},
+  //   {'image': ImageConst.gucci, 'logo': ImageConst.gucciLogo},
+  // ];
 
   int pageSelected = 0;
 
@@ -451,41 +451,56 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(
             height: 10.sp,
           ),
-          SizedBox(
-            height: 100.sp,
-            child: ListView.builder(
-              itemCount: 3,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) => Container(
-                margin: EdgeInsets.only(right: 4.w),
-                height: 100.sp,
-                width: 120.sp,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(
-                        image: AssetImage(brandManiaList[index]['image']),
-                        fit: BoxFit.cover)),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Container(
-                        height: 30.sp,
-                        width: 120.sp,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius:
-                              BorderRadius.vertical(bottom: Radius.circular(9)),
-                        ),
-                        child: Center(
-                          child: Image.asset(
-                            brandManiaList[index]['logo'],
-                            height: 15.sp,
-                          ),
-                        )),
-                  ],
-                ),
-              ),
-            ),
+          FutureBuilder(
+            future: FirebaseFirestore.instance
+                .collection('Admin')
+                .doc('brands')
+                .collection('brand_list')
+                .get(),
+            builder: (BuildContext context, AsyncSnapshot data) {
+              if (data.hasData) {
+                var brandManiaList = data.data.docs;
+                return SizedBox(
+                  height: 100.sp,
+                  child: ListView.builder(
+                    itemCount: 3,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) => Container(
+                      margin: EdgeInsets.only(right: 4.w),
+                      height: 100.sp,
+                      width: 120.sp,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                              image: NetworkImage(
+                                  brandManiaList[index]['brand_image'][0]),
+                              fit: BoxFit.cover)),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Container(
+                              height: 30.sp,
+                              width: 120.sp,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.vertical(
+                                    bottom: Radius.circular(9)),
+                              ),
+                              child: Center(
+                                child: Image.network(
+                                  brandManiaList[index]['brand_icon'][0],
+                                  height: 15.sp,
+                                ),
+                              )),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              } else {
+                return BrandsShimmer();
+              }
+            },
           ),
           SizedBox(
             height: 3.h,

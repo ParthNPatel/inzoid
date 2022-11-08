@@ -25,12 +25,12 @@ class CategoryScreen extends StatefulWidget {
 }
 
 class _CategoryScreenState extends State<CategoryScreen> {
-  List<Map<String, dynamic>> categories = [
-    {'image': ImageConst.shirts, 'title': "Shirts"},
-    {'image': ImageConst.dress, 'title': "Dress"},
-    {'image': ImageConst.suit, 'title': "Suit"},
-    {'image': ImageConst.jeans, 'title': "Jeans"},
-  ];
+  // List<Map<String, dynamic>> categories = [
+  //   {'image': ImageConst.shirts, 'title': "Shirts"},
+  //   {'image': ImageConst.dress, 'title': "Dress"},
+  //   {'image': ImageConst.suit, 'title': "Suit"},
+  //   {'image': ImageConst.jeans, 'title': "Jeans"},
+  // ];
 
   List<String> subCategories = [
     'All',
@@ -196,51 +196,73 @@ class _CategoryScreenState extends State<CategoryScreen> {
   Container brandNewCollection() {
     return Container(
       color: blueColor,
+      width: double.infinity,
       child: Column(
         children: [
           SizedBox(
             height: 3.h,
           ),
-          SizedBox(
-            height: 90.sp,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(
-                categories.length,
-                (index) => Column(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 5),
-                      height: 70.sp,
-                      width: 60.sp,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.black, width: 1),
-                      ),
-                      child: Center(
-                        child: Container(
-                          margin: EdgeInsets.symmetric(horizontal: 3),
-                          height: 65.sp,
-                          width: 60.sp,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            image: DecorationImage(
-                                image: AssetImage(categories[index]['image']),
-                                fit: BoxFit.cover),
-                          ),
+          FutureBuilder(
+            future: FirebaseFirestore.instance
+                .collection('Admin')
+                .doc('sub_categories')
+                .collection('sub_category_list')
+                .where('category_name', isEqualTo: widget.category)
+                .get(),
+            builder: (BuildContext context, AsyncSnapshot data) {
+              if (data.hasData) {
+                var categories = data.data.docs;
+                return SizedBox(
+                  height: 90.sp,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    physics: BouncingScrollPhysics(),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: List.generate(
+                        categories.length,
+                        (index) => Column(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.symmetric(horizontal: 5),
+                              height: 70.sp,
+                              width: 60.sp,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border:
+                                    Border.all(color: Colors.black, width: 1),
+                              ),
+                              child: Center(
+                                child: Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 3),
+                                  height: 65.sp,
+                                  width: 60.sp,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    image: DecorationImage(
+                                        image: NetworkImage(categories[index]
+                                            ['sub_category_image'][0]),
+                                        fit: BoxFit.cover),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 2.sp,
+                            ),
+                            CommonText.textBoldWight400(
+                              text: categories[index]['sub_category_name'],
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: 2.sp,
-                    ),
-                    CommonText.textBoldWight400(
-                      text: categories[index]['title'],
-                    ),
-                  ],
-                ),
-              ),
-            ),
+                  ),
+                );
+              } else {
+                return CategoryShimmer();
+              }
+            },
           ),
         ],
       ),

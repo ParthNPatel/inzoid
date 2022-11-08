@@ -165,6 +165,49 @@ class CategoryProductShimmer extends StatelessWidget {
   }
 }
 
+class BrandsShimmer extends StatelessWidget {
+  const BrandsShimmer({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+      child: SizedBox(
+        height: 100.sp,
+        child: ListView.builder(
+          itemCount: 3,
+          scrollDirection: Axis.horizontal,
+          itemBuilder: (context, index) => Container(
+            margin: EdgeInsets.only(right: 4.w),
+            height: 100.sp,
+            width: 120.sp,
+            decoration: BoxDecoration(
+              color: Colors.grey,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  height: 30.sp,
+                  width: 120.sp,
+                  decoration: BoxDecoration(
+                    color: Colors.grey,
+                    borderRadius:
+                        BorderRadius.vertical(bottom: Radius.circular(9)),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey,
+      direction: ShimmerDirection.ltr,
+    );
+  }
+}
+
 class BannerShimmer extends StatelessWidget {
   const BannerShimmer({Key? key}) : super(key: key);
 

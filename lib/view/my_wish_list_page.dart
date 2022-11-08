@@ -41,22 +41,6 @@ class _MyWishListPageState extends State<MyWishListPage>
     ));
   }
 
-  Padding bacButtonWidget() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: IconButton(
-        onPressed: () {
-          Get.back();
-        },
-        icon: Icon(
-          Icons.arrow_back_ios,
-          size: 18.sp,
-          color: Colors.black,
-        ),
-      ),
-    );
-  }
-
   Widget _descriptionWidget() {
     return Container(
       padding: const EdgeInsets.all(15.0),
@@ -262,4 +246,20 @@ class _WishListItemWidgetState extends State<WishListItemWidget> {
       ),
     );
   }
+}
+
+Padding bacButtonWidget() {
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: IconButton(
+      onPressed: () {
+        Get.back();
+      },
+      icon: Icon(
+        Icons.arrow_back_ios,
+        size: 18.sp,
+        color: Colors.black,
+      ),
+    ),
+  );
 }

@@ -6,6 +6,7 @@ import 'package:inzoid/constant/const_size.dart';
 import 'package:inzoid/constant/image_const.dart';
 import 'package:inzoid/constant/text_styel.dart';
 import 'package:inzoid/view/sign_in_screen.dart';
+import 'package:inzoid/view/view_profile_page.dart';
 import 'package:sizer/sizer.dart';
 
 import '../get_storage_services/get_storage_service.dart';
@@ -169,6 +170,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onTap: () {
                 if (GetStorageServices.getUserLoggedInStatus() != true) {
                   Get.to(() => SignInScreen());
+                } else {
+                  if (index == 0) {
+                    Get.to(EditProfileScreen());
+                  }
                 }
               },
               icon: accountOptions[index]['icon'],
@@ -223,7 +228,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 InkWell(
                   onTap: () {
-                    Get.to(EditProfileScreen());
+                    Get.to(ViewProfilePage());
                   },
                   child: CommonText.textBoldWight500(
                       textDecoration: TextDecoration.underline,

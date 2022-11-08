@@ -13,19 +13,19 @@ import '../get_storage_services/get_storage_service.dart';
 import 'bottom_bar_screen.dart';
 import 'my_wish_list_page.dart';
 
-class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({
+class ViewProfilePage extends StatefulWidget {
+  const ViewProfilePage({
     Key? key,
   }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _EditProfileScreenState();
+    return _ViewProfilePageState();
   }
 }
 
-class _EditProfileScreenState extends State<EditProfileScreen> {
+class _ViewProfilePageState extends State<ViewProfilePage> {
   TextEditingController? nameController;
   TextEditingController? fullNameController;
   TextEditingController? emailController;
@@ -65,7 +65,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             leading: bacButtonWidget(),
             centerTitle: true,
             title: CommonText.textBoldWight700(
-                text: 'Edit Profile', color: Colors.black),
+                text: 'My Profile', color: Colors.black),
           ),
           //resizeToAvoidBottomInset: false,
           body: _body()),
@@ -91,42 +91,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   height: 10,
                 ),
                 Container(
-                  margin: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 20.0),
-                  child: Text(
-                    "Profile",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 26.0,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                Stack(
-                  alignment: Alignment.bottomRight,
-                  children: [
-                    Container(
-                      height: 150,
-                      width: 150,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.grey.withOpacity(0.5)),
-                      child: showImageWidget(),
-                    ),
-                    Positioned(
-                      //bottom: 20,
-                      right: 10,
-                      child: CircleAvatar(
-                          backgroundColor: CommonColor.themColor309D9D,
-                          child: IconButton(
-                              onPressed: () {
-                                showDialogWidget();
-                              },
-                              icon: Icon(
-                                Icons.edit,
-                                color: Colors.white,
-                              ))),
-                    )
-                  ],
+                  height: 150,
+                  width: 150,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.grey.withOpacity(0.5)),
+                  child: showImageWidget(),
                 ),
                 SizedBox(
                   height: 20,
@@ -140,7 +110,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: TextField(
+                  child: TextFormField(
+                    enabled: false,
                     controller: nameController,
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.all(8.0),
@@ -173,6 +144,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: TextField(
+                    enabled: false,
                     controller: fullNameController,
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.all(8.0),
@@ -200,6 +172,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: TextField(
+                    enabled: false,
                     controller: emailController,
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.all(8.0),
@@ -227,6 +200,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: TextField(
+                    enabled: false,
                     controller: mobileController,
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.all(8.0),
@@ -240,78 +214,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         borderRadius: BorderRadius.circular(5.0),
                         borderSide:
                             BorderSide(color: themColors309D9D, width: 1.5),
-                      ),
-                    ),
-                  ),
-                ),
-                InkWell(
-                  onTap: () async {
-                    print('enter thg escree ');
-
-                    if (nameController!.text.isNotEmpty &&
-                        fullNameController!.text.isNotEmpty) {
-                      try {
-                        print('enter thg escree ');
-                        progress!.show();
-                        if (image != null) {
-                          var snapshot = await FirebaseStorage.instance
-                              .ref()
-                              .child(
-                                  'AllUserImage/${DateTime.now().microsecondsSinceEpoch}')
-                              .putFile(image!);
-                          liveImageURL = await snapshot.ref.getDownloadURL();
-                        }
-                        await FirebaseFirestore.instance
-                            .collection('All_User_Details')
-                            .doc(GetStorageServices.getToken())
-                            .update({
-                          'profile_image': liveImageURL,
-                          'user_name': nameController!.text.toString(),
-                          'is_Profile_check': true,
-                          'email': emailController!.text.trim().toString(),
-                          'phone_no': mobileController!.text.trim().toString(),
-                          'full_name': fullNameController!.text.toString(),
-                        });
-                        CommonMethod.setProfileAllDetails(
-                            uid: GetStorageServices.getToken(),
-                            imageUrl: liveImageURL!,
-                            email: emailController!.text.trim(),
-                            mobile: mobileController!.text.trim(),
-                            fullName: fullNameController!.text.toString(),
-                            name: nameController!.text.toString());
-
-                        Get.off(BottomNavScreen(
-                          index: 3,
-                        ));
-
-                        progress.dismiss();
-                      } catch (e) {
-                        progress!.dismiss();
-
-                        return CommonWidget.getSnackBar(
-                            message: 'went-wrong',
-                            title: 'Failed',
-                            duration: 2,
-                            color: Colors.red);
-                      }
-                    } else {
-                      CommonWidget.getSnackBar(
-                          message: 'All fields are required',
-                          title: 'Required',
-                          duration: 2,
-                          color: Colors.red);
-                    }
-                  },
-                  child: Container(
-                    height: 40,
-                    decoration: BoxDecoration(
-                        color: themColors309D9D,
-                        borderRadius: BorderRadius.circular(10)),
-                    margin: const EdgeInsets.all(10.0),
-                    child: Center(
-                      child: Text(
-                        'Update',
-                        style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
                     ),
                   ),
