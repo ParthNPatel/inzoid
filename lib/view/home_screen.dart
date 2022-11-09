@@ -6,11 +6,12 @@ import 'package:inzoid/constant/color_const.dart';
 import 'package:inzoid/constant/text_const.dart';
 import 'package:inzoid/view/category_screen.dart';
 import 'package:inzoid/view/product_detail_screen.dart';
+import 'package:inzoid/view/search_screen.dart';
 import 'package:inzoid/view/sign_in_screen.dart';
+import 'package:inzoid/view/web_view.dart';
 import 'package:sizer/sizer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../components/category_shimmer.dart';
-import '../components/favourite_button.dart';
 import '../components/product_shimmer.dart';
 import '../components/product_tile.dart';
 import '../constant/const_size.dart';
@@ -18,6 +19,7 @@ import '../constant/image_const.dart';
 import '../constant/text_styel.dart';
 import 'package:get/get.dart';
 import '../get_storage_services/get_storage_service.dart';
+import 'brand_mania_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -25,28 +27,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // List<Map<String, dynamic>> categories = [
-  //   {'image': ImageConst.deal, 'title': "Deal"},
-  //   {'image': ImageConst.men, 'title': "Men"},
-  //   {'image': ImageConst.women, 'title': "Women"},
-  //   {'image': ImageConst.kids, 'title': "Kids"},
-  //   {'image': ImageConst.sportsWear, 'title': "Sport Wear"},
-  // ];
-
-  // List<Map<String, dynamic>> categories = [
-  //   {'image': ImageConst.deal2, 'title': "Deal"},
-  //   {'image': ImageConst.men2, 'title': "Men"},
-  //   {'image': ImageConst.women2, 'title': "Women"},
-  //   {'image': ImageConst.kids2, 'title': "Kids"},
-  //   {'image': ImageConst.sportsWear2, 'title': "Sport Wear"},
-  // ];
-
-  // List<Map<String, dynamic>> brandManiaList = [
-  //   {'image': ImageConst.jiniJony, 'logo': ImageConst.jiniJonyLogo},
-  //   {'image': ImageConst.hm, 'logo': ImageConst.hmLogo},
-  //   {'image': ImageConst.gucci, 'logo': ImageConst.gucciLogo},
-  // ];
-
   int pageSelected = 0;
 
   @override
@@ -438,7 +418,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w600),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Get.to(() => BrandManiaScreen());
+                  },
                   child: CommonText.textBoldWight400(
                       color: themColors309D9D,
                       text: TextConst.seeAll,
@@ -536,16 +518,25 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                         itemBuilder: (context, index) {
                           var banners = snapshot.data.docs[index];
-                          return Container(
-                            margin: EdgeInsets.only(right: 6.w),
-                            //height: 150.sp,
-                            // width: 100.sp,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              image: DecorationImage(
-                                  image:
-                                      NetworkImage(banners['banner_image'][0]),
-                                  fit: BoxFit.cover),
+                          return InkWell(
+                            onTap: () {
+                              // https://www.youtube.com/results?search_query=tv+app+controll+to+remort+in+flutter+
+                              Get.to(() => WebViewScreen(
+                                    link:
+                                        'https://www.youtube.com/results?search_query=ecommerce+on+amazon',
+                                  ));
+                            },
+                            child: Container(
+                              margin: EdgeInsets.only(right: 6.w),
+                              //height: 150.sp,
+                              // width: 100.sp,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                image: DecorationImage(
+                                    image: NetworkImage(
+                                        banners['banner_image'][0]),
+                                    fit: BoxFit.cover),
+                              ),
                             ),
                           );
                         }),
@@ -695,7 +686,9 @@ class _HomeScreenState extends State<HomeScreen> {
           width: CommonSize.screenPadding,
         ),
         InkResponse(
-          onTap: () {},
+          onTap: () {
+            Get.to(() => SearchScreen(category: 'Search'));
+          },
           child: CommonWidget.commonSvgPitcher(
               image: ImageConst.search, height: 18.sp, width: 18.sp),
         ),
