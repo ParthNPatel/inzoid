@@ -180,8 +180,10 @@ class _VerificationScreenState extends State<VerificationScreen> {
                             }
 
                             GetStorageServices.setIsEmailOrPhone(false);
+
                             GetStorageServices.setToken(
                                 FirebaseAuth.instance.currentUser!.uid);
+
                             await CommonMethod.likeFiledAdd(context);
 
                             // Get.to(() => UpdatePasswordScreen());
@@ -219,7 +221,6 @@ class _VerificationScreenState extends State<VerificationScreen> {
         print('---------uid in current user $uid');
         GetStorageServices.setToken(uid);
         GetStorageServices.setUserLoggedIn();
-        Get.offAll(() => BottomNavScreen());
       }
     } on FirebaseAuthException catch (e) {
       progress.dismiss();

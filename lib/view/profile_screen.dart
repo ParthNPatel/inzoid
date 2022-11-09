@@ -5,6 +5,7 @@ import 'package:inzoid/constant/color_const.dart';
 import 'package:inzoid/constant/const_size.dart';
 import 'package:inzoid/constant/image_const.dart';
 import 'package:inzoid/constant/text_styel.dart';
+import 'package:inzoid/view/bottom_bar_screen.dart';
 import 'package:inzoid/view/sign_in_screen.dart';
 import 'package:inzoid/view/view_profile_page.dart';
 import 'package:sizer/sizer.dart';
@@ -42,6 +43,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       'title': 'Privacy and sharing',
     },
   ];
+
   List<Map<String, dynamic>> supportOptions = [
     {
       'icon': ImageConst.aboutUs,
@@ -60,6 +62,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       'title': 'Get Help',
     },
   ];
+
   List<Map<String, dynamic>> legalOptions = [
     {
       'icon': ImageConst.terms,
@@ -67,7 +70,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     },
     {
       'icon': ImageConst.feedback,
-      'title': 'Give us Feedback',
+      'title': 'Log Out',
     },
   ];
 
@@ -112,6 +115,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onTap: () {
                 if (GetStorageServices.getUserLoggedInStatus() != true) {
                   Get.to(() => SignInScreen());
+                }
+
+                if (index == 1) {
+                  GetStorageServices.logOut();
+                  Get.offAll(BottomNavScreen());
                 }
               },
               icon: legalOptions[index]['icon'],

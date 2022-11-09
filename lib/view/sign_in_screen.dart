@@ -141,7 +141,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             ),
                           ),
                           CommonText.textBoldWight500(
-                              text: "Continue with Mobile No")
+                              text: "Continue with Email")
                         ],
                       ),
 
@@ -241,7 +241,6 @@ class _SignInScreenState extends State<SignInScreen> {
     try {
       if (_emailMobileController.text.length == 10) {
         progress.show();
-
         await _auth.verifyPhoneNumber(
           phoneNumber: '+91' + _emailMobileController.text,
           verificationCompleted: (phoneAuthCredential) async {

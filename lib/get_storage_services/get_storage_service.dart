@@ -81,4 +81,15 @@ class GetStorageServices {
   static getIsEmailOrPhone() {
     return getStorage.read('setIsEmailOrPhone');
   }
+
+  static logOut() {
+    getStorage.remove('setIsEmailOrPhone');
+    getStorage.remove('setMobile');
+    getStorage.remove('setEmailValue');
+    getStorage.remove('setNameValue');
+    getStorage.remove('setProfileImage');
+    getStorage.remove('username');
+    getStorage.remove('isUserLoggedIn');
+    getStorage.remove('setFullNameValue');
+  }
 }

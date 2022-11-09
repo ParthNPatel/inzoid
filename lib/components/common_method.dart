@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -32,12 +34,15 @@ class CommonMethod {
           email: fetchData['email'],
           mobile: fetchData['phone_no'],
         );
+        log("Heyyyyy");
+        Get.off(BottomNavScreen());
       } catch (e) {
+        log("Heyyyyy1111111111");
         Get.off(SetProfileScreen());
       }
-      Get.off(BottomNavScreen());
     } catch (e) {
       try {
+        log("Heyyyyy222");
         await FirebaseFirestore.instance
             .collection("All_User_Details")
             .doc(GetStorageServices.getToken())
