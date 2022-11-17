@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:inzoid/view/bottom_bar_screen.dart';
 
 import '../get_storage_services/get_storage_service.dart';
+import '../services/app_notification.dart';
 import '../view/set_profile_screen.dart';
 
 class CommonMethod {
@@ -34,6 +35,11 @@ class CommonMethod {
           email: fetchData['email'],
           mobile: fetchData['phone_no'],
         );
+        await AppNotificationHandler.getFcmToken();
+        await FirebaseFirestore.instance
+            .collection("All_User_Details")
+            .doc(GetStorageServices.getToken())
+            .update({'fcm_token': GetStorageServices.getFcmToken()});
         log("Heyyyyy");
         Get.off(BottomNavScreen());
       } catch (e) {
@@ -43,6 +49,7 @@ class CommonMethod {
     } catch (e) {
       try {
         log("Heyyyyy222");
+        await AppNotificationHandler.getFcmToken();
         await FirebaseFirestore.instance
             .collection("All_User_Details")
             .doc(GetStorageServices.getToken())
@@ -50,7 +57,8 @@ class CommonMethod {
           "list_of_like": [],
           'profile_image': '',
           'user_name': '',
-          'is_Profile_check': true
+          'is_Profile_check': true,
+          'fcm_token': GetStorageServices.getFcmToken()
         });
         Get.off(SetProfileScreen());
       } catch (e) {

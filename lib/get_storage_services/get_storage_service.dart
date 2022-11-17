@@ -82,6 +82,15 @@ class GetStorageServices {
     return getStorage.read('setIsEmailOrPhone');
   }
 
+  /// fcm token
+  static setFcmToken(String fcmToken) {
+    getStorage.write('fcmToken', fcmToken);
+  }
+
+  static getFcmToken() {
+    return getStorage.read('fcmToken');
+  }
+
   static logOut() {
     getStorage.remove('setIsEmailOrPhone');
     getStorage.remove('setMobile');

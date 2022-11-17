@@ -9,6 +9,7 @@ import 'package:inzoid/view/sign_in_screen.dart';
 
 import '../get_storage_services/get_storage_service.dart';
 import 'my_wish_list_page.dart';
+import 'notification_sacreen.dart';
 
 class BottomNavScreen extends StatefulWidget {
   int? index;
@@ -47,7 +48,7 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
       body: pageSelected == 0
           ? HomeScreen()
           : pageSelected == 1
-              ? Center(child: Text("Notifications"))
+              ? NotificationScreen()
               : pageSelected == 2
                   ? MyWishListPage()
                   : ProfileScreen(),

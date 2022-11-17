@@ -32,7 +32,6 @@ class _MyWishListPageState extends State<MyWishListPage>
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0.7,
-        leading: bacButtonWidget(),
         centerTitle: true,
         title:
             CommonText.textBoldWight700(text: 'Wishlist', color: Colors.black),
