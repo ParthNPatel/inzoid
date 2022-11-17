@@ -15,8 +15,6 @@ class AppNotificationHandler {
   static AndroidNotificationChannel channel = AndroidNotificationChannel(
       'high_importance_channel', // id
       'High Importance Notifications', // title
-      // sound: RawResourceAndroidNotificationSound('iphone1'),
-      // 'This channel is used for important notifications.', // description
       importance: Importance.high,
       playSound: true);
 
@@ -28,7 +26,7 @@ class AppNotificationHandler {
       String? token = await firebaseMessaging.getToken();
 
       await GetStorageServices.setFcmToken(token!);
-      print('--------get fcm pref ${GetStorageServices.getFcmToken()}');
+      log('--------get fcm pref ${GetStorageServices.getFcmToken()}');
       log("=========fcm-token===$token");
       return token;
     } catch (e) {
@@ -42,14 +40,11 @@ class AppNotificationHandler {
     try {
       FirebaseMessaging.onMessage.listen((RemoteMessage? message) {
         RemoteNotification? notification = message!.notification;
-        if (notification!.body!.toString().split(' ').first == 'calling') {
-          print("it's calling time ");
-        } else {
-          showMsgNormal(notification);
-        }
+
+        showMsgNormal(notification!);
       });
     } on FirebaseException catch (e) {
-      print('notification 6 ${e.message}');
+      log('notification 6 ${e.message}');
     }
   }
 
@@ -60,49 +55,31 @@ class AppNotificationHandler {
           .getInitialMessage()
           .then((RemoteMessage? message) {
         if (message != null) {
-          print("action======1===111 ${message.data}");
-          print("action======1=== ${message.data['action_click']}");
-          print("slug======2=== ${message.data['slug_name']}");
+          log("action======1===111 ${message.data}");
+          log("action======1=== ${message.data['action_click']}");
+          log("slug======2=== ${message.data['slug_name']}");
           // _singleListingMainTrailController.setSlugName(
           //     slugName: '${message?.data['slug_name']}');
         }
       });
     } on FirebaseException catch (e) {
-      print('notification 5 ${e.message}');
+      log('notification 5 ${e.message}');
     }
   }
 
   ///show notification msg
   static void showMsg(RemoteNotification notification) {
     try {
-      InitializationSettings initializationSettings = InitializationSettings(
-        android: AndroidInitializationSettings(
-            "@drawable/ic_launcher"), /*iOS: DarwinNotificationDetails()*/
-      );
-      flutterLocalNotificationsPlugin.initialize(initializationSettings,
-          onDidReceiveBackgroundNotificationResponse: (payload) async {});
+      // InitializationSettings initializationSettings = InitializationSettings(
+      //   android: AndroidInitializationSettings(
+      //       "@drawable/ic_launcher"), /*iOS: DarwinNotificationDetails()*/
+      // );
+      // flutterLocalNotificationsPlugin.initialize(initializationSettings,
+      //     onDidReceiveBackgroundNotificationResponse: (payload) async {});
       flutterLocalNotificationsPlugin.show(
-          0,
-          // notification.hashCode,
+          notification.hashCode,
           notification.title,
           notification.body,
-
-          ///custom sound
-          // NotificationDetails(
-          //   android: AndroidNotificationDetails(
-          //     'high_importance_channel', // id
-          //     'High Importance Notifications',
-          //     sound: RawResourceAndroidNotificationSound('iphone1'),
-          //     importance: Importance.max,
-          //     playSound: true,
-          //     additionalFlags: Int32List.fromList(<int>[4]),
-          //     priority: Priority.high,
-          //     icon: '@mipmap/ic_launcher',
-          //   ),
-          //   // iOS: IOSNotificationDetails()
-          // )
-
-          ///default
           NotificationDetails(
               android: AndroidNotificationDetails(
                 'high_importance_channel', // id
@@ -115,7 +92,7 @@ class AppNotificationHandler {
               ),
               iOS: DarwinNotificationDetails()));
     } on FirebaseException catch (e) {
-      print('notification 4 ${e.message}');
+      log('notification 4 ${e.message}');
     }
   }
 
@@ -128,18 +105,18 @@ class AppNotificationHandler {
 
           ///default
           NotificationDetails(
-              android: AndroidNotificationDetails(
-                'high_importance_channel', // id
-                'High Importance Notifications', // title
-                // 'This channel is used for important notifications.',
-                // description
-                importance: Importance.high,
-                // when: DateTime.now().millisecondsSinceEpoch - 120 * 1000,
-                icon: '@mipmap/ic_launcher',
-              ),
-              iOS: DarwinNotificationDetails()));
+            android: AndroidNotificationDetails(
+              'high_importance_channel', // id
+              'High Importance Notifications', // title
+              // 'This channel is used for important notifications.',
+              // description
+              importance: Importance.high,
+              // when: DateTime.now().millisecondsSinceEpoch - 120 * 1000,
+              icon: '@mipmap/ic_launcher',
+            ), /* iOS: DarwinNotificationDetails()*/
+          ));
     } on FirebaseException catch (e) {
-      print('notification 3 ${e.message}');
+      log('notification 3 ${e.message}');
     }
   }
 
@@ -149,13 +126,10 @@ class AppNotificationHandler {
     try {
       await Firebase.initializeApp();
       RemoteNotification? notification = message.notification;
-      print(
-        'Notification -- ${notification!.body.toString().split(' ').first}',
-      );
     } on FirebaseException catch (e) {
-      print('FirebaseException 1 ${e.message}');
+      log('FirebaseException 1 ${e.message}');
     } catch (e) {
-      print('Error---->> $e');
+      log('Error---->> $e');
     }
 
     // RemoteNotification notification = message.notification ion!;
@@ -165,17 +139,17 @@ class AppNotificationHandler {
   static void onMsgOpen() {
     try {
       FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-        print('A new onMessageOpenedApp event was published!');
-        print('listen->${message.data}');
+        log('A new onMessageOpenedApp event was published!');
+        log('listen->${message.data}');
         // FlutterRingtonePlayer.stop();
 
         if (message != null) {
-          // print("action======1=== ${message?.data['action_click']}");
-          print("action======2=== ${message.data['action_click']}");
+          // log("action======1=== ${message?.data['action_click']}");
+          log("action======2=== ${message.data['action_click']}");
         }
       });
     } on FirebaseException catch (e) {
-      print('notification 2 ${e.message}');
+      log('notification 2 ${e.message}');
     }
   }
 
@@ -236,7 +210,7 @@ class AppNotificationHandler {
       // log("RESPONSE BODY ${response.body}");
       // return true}
     } catch (e) {
-      print("error push notification");
+      log("error push notification");
       // return false;
 
     }

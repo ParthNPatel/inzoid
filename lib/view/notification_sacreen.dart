@@ -1,5 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:inzoid/constant/text_styel.dart';
+import 'package:inzoid/get_storage_services/get_storage_service.dart';
+import 'package:sizer/sizer.dart';
 
 import '../constant/color_const.dart';
 
@@ -23,54 +27,56 @@ class _NotificationScreenState extends State<NotificationScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(18.0),
-        child: ListView.builder(
-          itemCount: 10,
-          itemBuilder: (context, index) {
-            return GestureDetector(
-              onTap: () {},
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 6),
-                child: Container(
-                  padding: const EdgeInsets.all(10.0),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      color: Colors.white,
-                      border: Border.all(
-                          color: CommonColor.greyColor3D3D3D.withOpacity(0.2),
-                          width: 0.5)),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        const SizedBox(width: 10),
-                        SizedBox(
-                            width: MediaQuery.of(context).size.width -
-                                162, // Full Width - 15padding +15 Padding + 50+10 ( Profile pic width) ,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CommonText.textBoldWight700(
-                                    text: 'Admin',
-                                    color: Colors.black,
-                                    fontSize: 16),
-                                Container(
-                                  padding: const EdgeInsets.fromLTRB(
-                                      0.0, 5.0, 10.0, 5.0),
-                                  height: 25,
-                                  child: CommonText.textBoldWight600(
-                                      text: 'hi iam admin',
-                                      color: Colors.grey,
-                                      fontSize: 10),
-                                ),
-                              ],
-                            )),
-                      ]),
-                ),
-              ),
-            );
+        child: FutureBuilder(
+          future: FirebaseFirestore.instance
+              .collection('All_User_Details')
+              .doc(GetStorageServices.getToken())
+              .collection('Notification')
+              .get(),
+          builder: (context, AsyncSnapshot snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                itemCount: snapshot.data.docs.length,
+                itemBuilder: (context, index) {
+                  var _res = snapshot.data.docs[index];
+                  return GestureDetector(
+                    onTap: () {},
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      child: Container(
+                        padding: const EdgeInsets.all(10.0),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            color: Colors.white,
+                            border: Border.all(
+                                color: CommonColor.greyColor3D3D3D
+                                    .withOpacity(0.2),
+                                width: 0.5)),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CommonText.textBoldWight700(
+                                text: 'Inzoid',
+                                color: Colors.black,
+                                fontSize: 16),
+                            Flexible(
+                              child: CommonText.textBoldWight600(
+                                  text: '${_res['msg']}',
+                                  color: Colors.grey,
+                                  fontSize: 9.sp),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
           },
         ),
       ),

@@ -8,6 +8,7 @@ import 'package:inzoid/view/profile_screen.dart';
 import 'package:inzoid/view/sign_in_screen.dart';
 
 import '../get_storage_services/get_storage_service.dart';
+import '../services/app_notification.dart';
 import 'my_wish_list_page.dart';
 import 'notification_sacreen.dart';
 
@@ -40,6 +41,9 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
   void initState() {
     pageSelected = widget.index!;
     super.initState();
+    AppNotificationHandler.getInitialMsg();
+    AppNotificationHandler.showMsgHandler();
+    AppNotificationHandler.onMsgOpen();
   }
 
   @override

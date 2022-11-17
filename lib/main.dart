@@ -46,12 +46,12 @@ void main() async {
           IOSFlutterLocalNotificationsPlugin>()
       ?.requestPermissions(alert: true, badge: true, sound: true);
 
-  await FirebaseMessaging.instance.requestPermission(
-    alert: true,
-    badge: true,
-    sound: true,
-    provisional: false,
-  );
+  // await FirebaseMessaging.instance.requestPermission(
+  //   alert: true,
+  //   badge: true,
+  //   sound: true,
+  //   provisional: false,
+  // );
   AppNotificationHandler.getInitialMsg();
   AppNotificationHandler.onMsgOpen();
   await FirebaseMessaging.instance.subscribeToTopic('all');
