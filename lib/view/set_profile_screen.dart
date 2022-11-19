@@ -282,7 +282,8 @@ class _SetProfileScreenState extends State<SetProfileScreen> {
                               ? mobileController!.text.trim().toString()
                               : '',
                           'full_name': fullNameController.text.toString(),
-                          'fcm_token': GetStorageServices.getFcmToken()
+                          'fcm_token': GetStorageServices.getFcmToken(),
+                          'created_date': DateTime.now().toString()
                         });
 
                         CommonMethod.setProfileAllDetails(

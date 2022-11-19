@@ -40,10 +40,11 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
   @override
   void initState() {
     pageSelected = widget.index!;
-    super.initState();
     AppNotificationHandler.getInitialMsg();
     AppNotificationHandler.showMsgHandler();
     AppNotificationHandler.onMsgOpen();
+
+    super.initState();
   }
 
   @override

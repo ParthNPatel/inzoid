@@ -7,69 +7,77 @@ import 'package:get_storage/get_storage.dart';
 import 'package:inzoid/constant/text_const.dart';
 import 'package:inzoid/services/app_notification.dart';
 import 'package:inzoid/view/bottom_bar_screen.dart';
-import 'package:inzoid/view/notification_sacreen.dart';
 import 'package:sizer/sizer.dart';
 import 'controller/filter_screen_controller.dart';
 
-FlutterLocalNotificationsPlugin? flutterLocalNotificationsPlugin =
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await GetStorage.init();
-  await AppNotificationHandler.getFcmToken();
 
-  DarwinNotificationDetails initializationSettingsIOs =
-      DarwinNotificationDetails(
-    presentAlert: true,
-    presentBadge: true,
-    presentSound: true,
-  );
-  final DarwinInitializationSettings initializationSettingsDarwin =
-      DarwinInitializationSettings(
-    requestAlertPermission: false,
-    requestBadgePermission: false,
-    requestSoundPermission: false,
-    onDidReceiveLocalNotification:
-        (int id, String? title, String? body, String? payload) async {},
-  );
-  await flutterLocalNotificationsPlugin!
+  FirebaseMessaging.onBackgroundMessage(
+      AppNotificationHandler.firebaseMessagingBackgroundHandler);
+  flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+  IOSInitializationSettings initializationSettings = IOSInitializationSettings(
+      requestAlertPermission: true,
+      requestSoundPermission: true,
+      requestBadgePermission: true);
+  await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(AppNotificationHandler.channel);
-  await flutterLocalNotificationsPlugin!
+  await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
           IOSFlutterLocalNotificationsPlugin>()
-      ?.initialize(initializationSettingsDarwin);
-  await flutterLocalNotificationsPlugin!
+      ?.initialize(initializationSettings);
+  await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
           IOSFlutterLocalNotificationsPlugin>()
       ?.requestPermissions(alert: true, badge: true, sound: true);
 
-  // await FirebaseMessaging.instance.requestPermission(
-  //   alert: true,
-  //   badge: true,
-  //   sound: true,
-  //   provisional: false,
-  // );
-  AppNotificationHandler.getInitialMsg();
-  AppNotificationHandler.onMsgOpen();
-  await FirebaseMessaging.instance.subscribeToTopic('all');
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: false,
+    badge: false,
+    sound: false,
+  );
 
-  FirebaseMessaging.onBackgroundMessage(
-      AppNotificationHandler.firebaseMessagingBackgroundHandler);
-  // AppNotificationHandler.handleCallNotificationEvent();
-  // AppNotificationHandler.firebaseMessagingBackgroundHandler();
+  // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('app_icon');
+  InitializationSettings initializationSettings1 = InitializationSettings(
+      android: initializationSettingsAndroid, iOS: initializationSettings);
+  flutterLocalNotificationsPlugin.initialize(
+    initializationSettings1,
+    onSelectNotification: (payload) {
+      print('ccvcvvcvcvcvvcvcvvcvcvcvcvc');
+      //if (payload == "Notification_screen") {
+      Get.to(
+        () => BottomNavScreen(
+          index: 3,
+        ),
+      );
+      //}
+    },
+  );
+
+  await AppNotificationHandler.getFcmToken();
+
+  // AppNotificationHandler.getInitialMsg();
+  // AppNotificationHandler.onMsgOpen();
+  await FirebaseMessaging.instance.subscribeToTopic('all');
 
   // Update the iOS foreground notification presentation options to allow
   // heads up notifications.
-  // await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-  //   alert: false,
-  //   badge: false,
-  //   sound: false,
-  // );
-  AppNotificationHandler.showMsgHandler();
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
 
+  AppNotificationHandler.showMsgHandler();
   runApp(MyApp());
 }
 
