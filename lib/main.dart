@@ -12,56 +12,13 @@ import 'controller/filter_screen_controller.dart';
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await GetStorage.init();
 
-  FirebaseMessaging.onBackgroundMessage(
-      AppNotificationHandler.firebaseMessagingBackgroundHandler);
   flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
-  IOSInitializationSettings initializationSettings = IOSInitializationSettings(
-      requestAlertPermission: true,
-      requestSoundPermission: true,
-      requestBadgePermission: true);
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(AppNotificationHandler.channel);
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          IOSFlutterLocalNotificationsPlugin>()
-      ?.initialize(initializationSettings);
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          IOSFlutterLocalNotificationsPlugin>()
-      ?.requestPermissions(alert: true, badge: true, sound: true);
-
-  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-    alert: false,
-    badge: false,
-    sound: false,
-  );
-
-  // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
-  const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('app_icon');
-  InitializationSettings initializationSettings1 = InitializationSettings(
-      android: initializationSettingsAndroid, iOS: initializationSettings);
-  flutterLocalNotificationsPlugin.initialize(
-    initializationSettings1,
-    onSelectNotification: (payload) {
-      print('ccvcvvcvcvcvvcvcvvcvcvcvcvc');
-      //if (payload == "Notification_screen") {
-      Get.to(
-        () => BottomNavScreen(
-          index: 3,
-        ),
-      );
-      //}
-    },
-  );
 
   await AppNotificationHandler.getFcmToken();
 
