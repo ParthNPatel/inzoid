@@ -59,56 +59,62 @@ class _HomeScreenState extends State<HomeScreen> {
                               var categories = data.data.docs;
 
                               log('DATA==>${data}');
-                              return Column(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      Get.to(
-                                        () => CategoryScreen(
-                                          category: categories[index]
-                                              ['category_name'],
-                                        ),
-                                      );
-                                    },
-                                    child: Container(
-                                      margin:
-                                          EdgeInsets.symmetric(horizontal: 5),
-                                      height: 55.sp,
-                                      width: 45.sp,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        border: Border.all(
-                                            color: Colors.black, width: 1),
-                                      ),
-                                      child: Center(
-                                        child: Container(
-                                          margin: EdgeInsets.symmetric(
-                                              horizontal: 3),
-                                          height: 50.sp,
-                                          width: 48.sp,
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey,
-                                            borderRadius:
-                                                BorderRadius.circular(7),
-                                            image: DecorationImage(
-                                                image: NetworkImage(categories[
-                                                            index]
-                                                        ['category_image'][0]
-                                                    .toString()),
-                                                fit: BoxFit.cover),
+
+                              return categories[index]['category_name'] == "All"
+                                  ? SizedBox()
+                                  : Column(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            Get.to(
+                                              () => CategoryScreen(
+                                                category: categories[index]
+                                                    ['category_name'],
+                                              ),
+                                            );
+                                          },
+                                          child: Container(
+                                            margin: EdgeInsets.symmetric(
+                                                horizontal: 5),
+                                            height: 55.sp,
+                                            width: 45.sp,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              border: Border.all(
+                                                  color: Colors.black,
+                                                  width: 1),
+                                            ),
+                                            child: Center(
+                                              child: Container(
+                                                margin: EdgeInsets.symmetric(
+                                                    horizontal: 3),
+                                                height: 50.sp,
+                                                width: 48.sp,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey,
+                                                  borderRadius:
+                                                      BorderRadius.circular(7),
+                                                  image: DecorationImage(
+                                                      image: NetworkImage(
+                                                          categories[index][
+                                                                  'category_image'][0]
+                                                              .toString()),
+                                                      fit: BoxFit.cover),
+                                                ),
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 3.sp,
-                                  ),
-                                  CommonText.textBoldWight400(
-                                    text: categories[index]['category_name'],
-                                  ),
-                                ],
-                              );
+                                        SizedBox(
+                                          height: 3.sp,
+                                        ),
+                                        CommonText.textBoldWight400(
+                                          text: categories[index]
+                                              ['category_name'],
+                                        ),
+                                      ],
+                                    );
                             },
                           ),
                         );

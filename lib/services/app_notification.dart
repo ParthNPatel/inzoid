@@ -54,7 +54,7 @@ class AppNotificationHandler {
     print('MESSAGE NORMAL SHOW');
     try {
       //var data = jsonDecode(notification.body!);
-      String screen = msg.data['body'];
+      String screen = jsonEncode(msg.data);
       flutterLocalNotificationsPlugin.show(
           notification.hashCode,
           notification.title,

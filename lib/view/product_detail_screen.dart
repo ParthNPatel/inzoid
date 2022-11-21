@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -15,8 +18,10 @@ import '../get_storage_services/get_storage_service.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final productData;
+  final bool? isDecoded;
 
-  const ProductDetailScreen({super.key, this.productData});
+  const ProductDetailScreen(
+      {super.key, this.productData, this.isDecoded = false});
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
@@ -68,10 +73,23 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       'rating': '(200 Ratings)'
     },
   ];
+
   bool isContainCheck = false;
+
+  bool isDone = false;
+
+  @override
+  void initState() {
+    isDone = widget.isDecoded!;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    log("DATA++>>${widget.productData}");
+    // log('Run Type==>${jsonDecode(widget.productData['listOfImage']).length > 1}');
+    log('Run Type11111==>$isDone');
+    log('Run Type==>${widget.isDecoded == true ? jsonDecode(widget.productData['listOfImage']).length > 1 : widget.productData['listOfImage'].length > 1}');
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -156,7 +174,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         decoration: BoxDecoration(
                           image: DecorationImage(
                               image: NetworkImage(
-                                  '${widget.productData['listOfImage'][index]}'),
+                                  '${isDone == true ? jsonDecode(widget.productData['listOfImage'])[index] : widget.productData['listOfImage'][index]}'),
                               fit: BoxFit.cover),
                         ),
                       );
@@ -166,18 +184,37 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         currentPage = val;
                       });
                     },
-                    itemCount: widget.productData['listOfImage'].length,
+                    itemCount: isDone == true
+                        ? jsonDecode(widget.productData['listOfImage']).length
+                        : widget.productData['listOfImage'].length,
                   ),
                 ),
-                widget.productData['listOfImage'].length > 1
+                isDone == false
                     ? Positioned(
                         left: 0,
                         right: 0,
                         bottom: 20,
-                        child: buildDots(currentPage,
-                            widget.productData['listOfImage'].length),
+                        child: widget.productData['listOfImage'].length > 1
+                            ? buildDots(
+                                currentPage,
+                                widget.productData['listOfImage'].length,
+                              )
+                            : SizedBox(),
                       )
-                    : SizedBox()
+                    : Positioned(
+                        left: 0,
+                        right: 0,
+                        bottom: 20,
+                        child: jsonDecode(widget.productData['listOfImage'])
+                                    .length >
+                                1
+                            ? buildDots(
+                                currentPage,
+                                jsonDecode(widget.productData['listOfImage'])
+                                    .length,
+                              )
+                            : SizedBox(),
+                      ),
               ],
             ),
             Padding(

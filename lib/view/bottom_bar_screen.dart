@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -6,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:inzoid/constant/color_const.dart';
 import 'package:inzoid/constant/image_const.dart';
 import 'package:inzoid/view/home_screen.dart';
+import 'package:inzoid/view/product_detail_screen.dart';
 import 'package:inzoid/view/profile_screen.dart';
 import 'package:inzoid/view/sign_in_screen.dart';
 import '../get_storage_services/get_storage_service.dart';
@@ -77,14 +80,21 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
     flutterLocalNotificationsPlugin.initialize(
       initializationSettings1,
       onSelectNotification: (payload) {
-        print('ccvcvvcvcvcvvcvcvvcvcvcvcvc');
+        print('ccvcvvcvcvcvvcvcvvcvcvcvcvc$payload');
         //if (payload == "Notification_screen") {
-        Get.to(
-          () => BottomNavScreen(
-            index: 1,
-          ),
-        );
-        //}
+
+        if (payload!.contains("subCategory")) {
+          Get.to(
+            () => ProductDetailScreen(
+                productData: jsonDecode(payload), isDecoded: true),
+          );
+        } else {
+          Get.to(
+            () => BottomNavScreen(
+              index: 1,
+            ),
+          );
+        }
       },
     );
   }
