@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:inzoid/components/common_widget.dart';
 import 'package:inzoid/constant/color_const.dart';
 import 'package:inzoid/constant/text_const.dart';
+import 'package:inzoid/view/bottom_bar_screen.dart';
 import 'package:inzoid/view/category_screen.dart';
 import 'package:inzoid/view/product_detail_screen.dart';
 import 'package:inzoid/view/search_screen.dart';
@@ -684,15 +685,19 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       actions: [
-        InkResponse(
-          onTap: () {},
+        InkWell(
+          onTap: () {
+            Get.off(() => BottomNavScreen(
+                  index: 1,
+                ));
+          },
           child: CommonWidget.commonSvgPitcher(
               image: ImageConst.bell, height: 18.sp, width: 18.sp),
         ),
         SizedBox(
           width: CommonSize.screenPadding,
         ),
-        InkResponse(
+        InkWell(
           onTap: () {
             Get.to(() => SearchScreen(category: 'Search'));
           },
