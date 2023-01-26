@@ -9,7 +9,6 @@ import 'package:inzoid/view/bottom_bar_screen.dart';
 import 'package:inzoid/view/sign_in_screen.dart';
 import 'package:inzoid/view/view_profile_page.dart';
 import 'package:sizer/sizer.dart';
-
 import '../get_storage_services/get_storage_service.dart';
 import 'edit_profile_screen.dart';
 
@@ -178,10 +177,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onTap: () {
                 if (GetStorageServices.getUserLoggedInStatus() != true) {
                   Get.to(() => SignInScreen());
-                } else {
-                  if (index == 0) {
-                    Get.to(EditProfileScreen());
-                  }
+                } else if (index == 0) {
+                  Get.to(EditProfileScreen());
+                } else if (index == 2) {
+                  Get.to(
+                    BottomNavScreen(
+                      index: 1,
+                    ),
+                  );
                 }
               },
               icon: accountOptions[index]['icon'],

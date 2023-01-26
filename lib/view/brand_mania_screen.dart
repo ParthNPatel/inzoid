@@ -39,6 +39,13 @@ class _BrandManiaScreenState extends State<BrandManiaScreen> {
                   width: 120.sp,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                            color: CommonColor.greyColorD9D9D9,
+                            blurRadius: 2,
+                            spreadRadius: 2,
+                            offset: Offset(2, 2))
+                      ],
                       image: DecorationImage(
                           image: NetworkImage(
                               brandManiaList[index]['brand_image'][0]),
@@ -48,7 +55,7 @@ class _BrandManiaScreenState extends State<BrandManiaScreen> {
                     children: [
                       Container(
                           height: 30.sp,
-                          width: 120.sp,
+                          width: double.infinity,
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.vertical(

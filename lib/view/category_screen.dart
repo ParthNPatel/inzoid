@@ -7,8 +7,10 @@ import 'package:inzoid/constant/text_styel.dart';
 import 'package:inzoid/view/filter_screen.dart';
 import 'package:inzoid/view/product_detail_screen.dart';
 import 'package:inzoid/view/sign_in_screen.dart';
+import 'package:inzoid/view/web_view.dart';
 import 'package:sizer/sizer.dart';
 import 'package:get/get.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../components/category_shimmer.dart';
 import '../components/product_tile.dart';
@@ -40,6 +42,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
   ];
 
   int categorySelected = 0;
+
+  int pageSelected = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -76,16 +80,110 @@ class _CategoryScreenState extends State<CategoryScreen> {
           children: [
             filterOption(),
             brandNewCollection(),
-            Container(
-              height: 250.sp,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage(
-                        ImageConst.banner2,
-                      ),
-                      fit: BoxFit.cover)),
+            FutureBuilder(
+              future: FirebaseFirestore.instance
+                  .collection('Admin')
+                  .doc('banners')
+                  .collection('banner_list')
+                  .where('category', isEqualTo: widget.category)
+                  .get(),
+              builder: (context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  return Container(
+                    color: Colors.white,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 250.sp,
+                          child: PageView.builder(
+                              itemCount: snapshot.data.docs.length,
+                              onPageChanged: (value) {
+                                setState(() {
+                                  pageSelected = value;
+                                });
+                              },
+                              itemBuilder: (context, index) {
+                                var banners = snapshot.data.docs[index];
+                                return InkWell(
+                                  onTap: () {
+                                    // https://www.youtube.com/results?search_query=tv+app+controll+to+remort+in+flutter+
+                                    Get.to(
+                                      () => WebViewScreen(
+                                        link: '${banners['link']}',
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    //height: 150.sp,
+                                    // width: 100.sp,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          image: NetworkImage(
+                                              banners['banner_image'][0]),
+                                          fit: BoxFit.cover),
+                                    ),
+                                  ),
+                                );
+                              }),
+                        ),
+                        SizedBox(
+                          height: 3.h,
+                        ),
+                        snapshot.data.docs.length < 2
+                            ? SizedBox()
+                            : AnimatedSmoothIndicator(
+                                activeIndex: pageSelected,
+                                count: snapshot.data.docs.length,
+                                effect: WormEffect(
+                                    spacing: 4,
+                                    dotWidth: 7.0,
+                                    dotHeight: 7.0,
+                                    dotColor: CommonColor.greyColorD9D9D9,
+                                    activeDotColor: themColors309D9D),
+                              ),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.center,
+                        //   children: List.generate(
+                        //       3,
+                        //       (index) => Padding(
+                        //             padding: const EdgeInsets.symmetric(horizontal: 3),
+                        //             child: GestureDetector(
+                        //               onTap: () {
+                        //                 setState(() {
+                        //                   pageSelected = index;
+                        //                 });
+                        //               },
+                        //               child: CircleAvatar(
+                        //                 radius: 3.5,
+                        //                 backgroundColor: pageSelected == index
+                        //                     ? themColors309D9D
+                        //                     : CommonColor.greyColorD9D9D9,
+                        //               ),
+                        //             ),
+                        //           )),
+                        // ),
+                        SizedBox(
+                          height: 4.h,
+                        ),
+                      ],
+                    ),
+                  );
+                } else {
+                  return BannerShimmer();
+                }
+              },
             ),
+            // Container(
+            //   height: 250.sp,
+            //   width: double.infinity,
+            //   decoration: BoxDecoration(
+            //     image: DecorationImage(
+            //         image: AssetImage(
+            //           ImageConst.banner2,
+            //         ),
+            //         fit: BoxFit.cover),
+            //   ),
+            // ),
             SizedBox(
               height: 2.h,
             ),

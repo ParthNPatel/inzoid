@@ -527,10 +527,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           return InkWell(
                             onTap: () {
                               // https://www.youtube.com/results?search_query=tv+app+controll+to+remort+in+flutter+
-                              Get.to(() => WebViewScreen(
-                                    link:
-                                        'https://www.youtube.com/results?search_query=ecommerce+on+amazon',
-                                  ));
+                              Get.to(
+                                () => WebViewScreen(
+                                  link: '${banners['link']}',
+                                ),
+                              );
                             },
                             child: Container(
                               margin: EdgeInsets.only(right: 6.w),
