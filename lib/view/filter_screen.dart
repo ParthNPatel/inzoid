@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inzoid/constant/color_const.dart';
 import 'package:inzoid/constant/text_const.dart';
+import 'package:inzoid/view/category_screen.dart';
 import 'package:sizer/sizer.dart';
 
 import '../components/common_widget.dart';
@@ -11,7 +12,8 @@ import '../constant/text_styel.dart';
 import '../controller/filter_screen_controller.dart';
 
 class FilterScreen extends StatefulWidget {
-  const FilterScreen({Key? key}) : super(key: key);
+  final categories;
+  const FilterScreen({Key? key, this.categories}) : super(key: key);
 
   @override
   State<FilterScreen> createState() => _FilterScreenState();
@@ -24,13 +26,13 @@ class _FilterScreenState extends State<FilterScreen> {
   List<String> seasonList = ['Summer', 'Autumn', 'Winter', 'Spring'];
   List<String> materialList = ['Viscose', 'Cotton', 'Cotton', 'Linen'];
 
-  List<Color> colorList = [
-    Color(0xffDCDCDC),
-    Color(0xffFBFFC8),
-    Color(0xffFFFFFF),
-    Color(0xffE7E7FF),
-    Color(0xff934232),
-    Color(0xff444B73),
+  List<String> colorList = [
+    '0xffDCDCDC',
+    '0xffFBFFC8',
+    '0xffFFFFFF',
+    '0xffE7E7FF',
+    '0xff934232',
+    '0xff444B73',
   ];
   @override
   Widget build(BuildContext context) {
@@ -77,7 +79,7 @@ class _FilterScreenState extends State<FilterScreen> {
                   values: RangeValues(
                       controller.rangeOfSlider, controller.rangeOfSlider1),
                   min: 0.0,
-                  max: 100.0,
+                  max: 10000.0,
                   // label: '${controller.rangeOfSlider.round()}',
                   onChanged: (value) {
                     controller.setRangeOfSlider(value.start);
@@ -166,11 +168,13 @@ class _FilterScreenState extends State<FilterScreen> {
                     EdgeInsets.symmetric(horizontal: CommonSize.screenPadding),
                 child: CommonWidget.commonButton(
                     onTap: () {
-                      Get.back();
+                      Get.off(() => CategoryScreen(
+                            category: '${widget.categories}',
+                          ));
 
                       setState(() {});
                     },
-                    text: 'Show 248 items'),
+                    text: 'Show items'),
               ),
               CommonWidget.commonSizedBox(height: 50),
             ]),
@@ -197,7 +201,7 @@ class _FilterScreenState extends State<FilterScreen> {
                 padding: EdgeInsets.all(3.sp),
                 child: GestureDetector(
                   onTap: () {
-                    controller.setIndexOfColor(index);
+                    controller.setIndexOfColor(index, colorList[index]);
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 4),
@@ -217,7 +221,7 @@ class _FilterScreenState extends State<FilterScreen> {
                             blurRadius: 1.0,
                           ),
                         ],
-                        color: colorList[index]),
+                        color: Color(int.parse(colorList[index]))),
                   ),
                 ),
               );
@@ -295,7 +299,7 @@ class _FilterScreenState extends State<FilterScreen> {
                 padding: EdgeInsets.all(8.sp),
                 child: GestureDetector(
                   onTap: () {
-                    controller.setIndexOfSize(index);
+                    controller.setIndexOfSize(index, sizeList[index]);
                   },
                   child: Container(
                     alignment: Alignment.center,
@@ -334,7 +338,20 @@ class _FilterScreenState extends State<FilterScreen> {
         padding: const EdgeInsets.all(8.0),
         child: IconButton(
           onPressed: () {
+            _filterScreenController.startPrice = 0;
+            _filterScreenController.endPrice = 10000;
+            _filterScreenController.rangeOfSlider = 0;
+            _filterScreenController.rangeOfSlider1 = 10000;
+            _filterScreenController.sizeName = null;
+            _filterScreenController.indexOfSize = 0;
+            _filterScreenController.seasonName = null;
+            _filterScreenController.indexOfSeason = 0;
+            _filterScreenController.colorName = null;
+            _filterScreenController.indexOfColor = 0;
+            _filterScreenController.materialName = null;
+            _filterScreenController.indexOfMaterialColor = 0;
             Get.back();
+            setState(() {});
           },
           icon: Icon(
             Icons.arrow_back_ios,
@@ -351,8 +368,26 @@ class _FilterScreenState extends State<FilterScreen> {
           padding: const EdgeInsets.only(right: 20),
           child: Row(
             children: [
-              CommonText.textBoldWight500(
-                  text: TextConst.reset, color: CommonColor.themColor309D9D),
+              GestureDetector(
+                onTap: () {
+                  _filterScreenController.startPrice = 0;
+                  _filterScreenController.endPrice = 10000;
+                  _filterScreenController.rangeOfSlider = 0;
+                  _filterScreenController.rangeOfSlider1 = 10000;
+                  _filterScreenController.sizeName = null;
+                  _filterScreenController.indexOfSize = 0;
+                  _filterScreenController.seasonName = null;
+                  _filterScreenController.indexOfSeason = 0;
+                  _filterScreenController.colorName = null;
+                  _filterScreenController.indexOfColor = 0;
+                  _filterScreenController.materialName = null;
+                  _filterScreenController.indexOfMaterialColor = 0;
+                  Get.back();
+                  setState(() {});
+                },
+                child: CommonText.textBoldWight500(
+                    text: TextConst.reset, color: CommonColor.themColor309D9D),
+              ),
             ],
           ),
         )

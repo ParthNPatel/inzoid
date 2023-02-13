@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:inzoid/components/common_widget.dart';
 import 'package:inzoid/constant/color_const.dart';
 import 'package:inzoid/constant/const_size.dart';
@@ -41,7 +42,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
     'Jeans',
     'Outer Desss',
   ];
-
+  List<QueryDocumentSnapshot<Map<String, dynamic>>>? demoData = [];
+  List<QueryDocumentSnapshot<Map<String, dynamic>>>? dummyData = [];
   int categorySelected = 0;
 
   int pageSelected = 0;
@@ -234,55 +236,113 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   .collection('Admin')
                   .doc('all_product')
                   .collection('product_data')
-                  // .where('price',
-                  //     isLessThanOrEqualTo: filterScreenController.rangeOfSlider)
-                  // .where('season', isEqualTo: filterScreenController.season)
-                  // .where('material',
-                  //     isEqualTo: filterScreenController.materialName)
-                  // .where('sizes', isEqualTo: null)
-                  // .where('color', isEqualTo: null)
                   .where('category', isEqualTo: '${widget.category}')
                   // .orderBy('create_time', descending: true)
                   .get(),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
                 if (snapshot.hasData) {
-                  if (snapshot.data.docs.length != 0) {
-                    return GridView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: snapshot.data.docs.length,
-                        padding: EdgeInsets.symmetric(horizontal: 4.w),
-                        shrinkWrap: true,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 17.sp,
-                            childAspectRatio: 2.2.sp / 3.7.sp,
-                            crossAxisSpacing: 10),
-                        itemBuilder: (context, index) {
-                          var data = snapshot.data.docs[index];
-                          print('---data[price]---${data['price']}');
-                          print(
-                              '---filterScreenController.rangeOfSlider---${filterScreenController.rangeOfSlider.toStringAsFixed(0)}');
-                          return ProductTile(
-                            onTap: () {
-                              if (GetStorageServices.getUserLoggedInStatus() ==
-                                  true) {
-                                Get.to(() => ProductDetailScreen(
-                                      productData: snapshot.data.docs[index],
-                                    ));
-                              } else {
-                                Get.to(() => SignInScreen());
-                              }
-                            },
-                            image: data['listOfImage'][0],
-                            title: data['productName'],
-                            stock: data['quantity'],
-                            subtitle: data['brand'],
-                            price: data['price'],
-                            oldPrice: data['oldPrice'],
-                            rating: '(200 Ratings)',
-                            productID: int.parse(data['productId']),
-                          );
-                        });
+                  print('----DEMO${filterScreenController.materialName}');
+                  print('----DEMO1${filterScreenController.seasonName}');
+                  print('----DEMO2${filterScreenController.sizeName}');
+                  print('----DEMO3${filterScreenController.colorName}');
+                  print('----startPrice${filterScreenController.startPrice}');
+                  print('----endPrice${filterScreenController.endPrice}');
+
+                  if (snapshot.data!.docs.length != 0) {
+                    return MasonryGridView.count(
+                      // mainAxisSpacing: 20,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: snapshot.data!.docs.length,
+                      padding: EdgeInsets.symmetric(horizontal: 4.w),
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        var data = snapshot.data!.docs[index];
+                        if (filterScreenController.startPrice == null &&
+                            filterScreenController.endPrice == null &&
+                            filterScreenController.colorName == null) {
+                          print('------0000');
+                          return buildProductTile(snapshot, index, data);
+                        } else if (data['price'] >
+                                filterScreenController.startPrice &&
+                            data['price'] < filterScreenController.endPrice &&
+                            (data['color'] as List)
+                                .contains(filterScreenController.colorName)) {
+                          print('------111');
+
+                          return buildProductTile(snapshot, index, data);
+                        } else if (data['price'] >
+                                filterScreenController.startPrice &&
+                            data['price'] < filterScreenController.endPrice &&
+                            filterScreenController.colorName == null) {
+                          print('------2222');
+
+                          return buildProductTile(snapshot, index, data);
+                        } else if (filterScreenController.startPrice == 0 &&
+                            filterScreenController.endPrice == 10000 &&
+                            (data['color'] as List)
+                                .contains(filterScreenController.colorName)) {
+                          print('------3333');
+
+                          return buildProductTile(snapshot, index, data);
+                        } else {
+                          print('------4444');
+
+                          return SizedBox();
+                        }
+                      },
+                      crossAxisCount: 2,
+                    );
+
+                    // GridView.builder(
+                    //     physics: NeverScrollableScrollPhysics(),
+                    //     itemCount: snapshot.data!.docs.length,
+                    //     padding: EdgeInsets.symmetric(horizontal: 4.w),
+                    //     shrinkWrap: true,
+                    //     gridDelegate:
+                    //         SliverGridDelegateWithFixedCrossAxisCount(
+                    //             crossAxisCount: 2,
+                    //             mainAxisSpacing: 17.sp,
+                    //             childAspectRatio: 2.2.sp / 3.7.sp,
+                    //             crossAxisSpacing: 10),
+                    //     itemBuilder: (context, index) {
+                    //       var data = snapshot.data!.docs[index];
+                    //       if (filterScreenController.startPrice == null &&
+                    //           filterScreenController.endPrice == null &&
+                    //           filterScreenController.colorName == null) {
+                    //         print('------0000');
+                    //         return buildProductTile(snapshot, index, data);
+                    //       } else if (data['price'] >
+                    //               filterScreenController.startPrice &&
+                    //           data['price'] <
+                    //               filterScreenController.endPrice &&
+                    //           (data['color'] as List).contains(
+                    //               filterScreenController.colorName)) {
+                    //         print('------111');
+                    //
+                    //         return buildProductTile(snapshot, index, data);
+                    //       } else if (data['price'] >
+                    //               filterScreenController.startPrice &&
+                    //           data['price'] <
+                    //               filterScreenController.endPrice &&
+                    //           filterScreenController.colorName == null) {
+                    //         print('------2222');
+                    //
+                    //         return buildProductTile(snapshot, index, data);
+                    //       } else if (filterScreenController.startPrice ==
+                    //               null &&
+                    //           filterScreenController.endPrice == 10000 &&
+                    //           (data['color'] as List).contains(
+                    //               filterScreenController.colorName)) {
+                    //         print('------3333');
+                    //
+                    //         return buildProductTile(snapshot, index, data);
+                    //       } else {
+                    //         print('------4444');
+                    //
+                    //         return SizedBox();
+                    //       }
+                    //     });
                   } else {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -303,6 +363,34 @@ class _CategoryScreenState extends State<CategoryScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  ProductTile buildProductTile(
+      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,
+      int index,
+      QueryDocumentSnapshot<Map<String, dynamic>> data) {
+    return ProductTile(
+      needBottomMargin: true,
+      onTap: () {
+        print('----ID${data['productId']}');
+
+        if (GetStorageServices.getUserLoggedInStatus() == true) {
+          Get.to(() => ProductDetailScreen(
+                productData: snapshot.data!.docs[index],
+              ));
+        } else {
+          Get.to(() => SignInScreen());
+        }
+      },
+      image: data['listOfImage'][0],
+      title: data['productName'],
+      stock: data['quantity'],
+      subtitle: data['brand'],
+      price: data['price'],
+      oldPrice: data['oldPrice'],
+      rating: '(200 Ratings)',
+      productID: int.parse(data['productId']),
     );
   }
 
@@ -394,7 +482,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
         children: [
           InkWell(
             onTap: () {
-              Get.to(() => FilterScreen());
+              Get.to(() => FilterScreen(
+                    categories: widget.category,
+                  ));
             },
             child: Row(
               children: [

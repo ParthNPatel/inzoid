@@ -254,7 +254,9 @@ class _SearchScreenState extends State<SearchScreen> {
         children: [
           InkWell(
             onTap: () {
-              Get.to(() => FilterScreen());
+              Get.to(() => FilterScreen(
+                    categories: widget.category,
+                  ));
             },
             child: Row(
               children: [

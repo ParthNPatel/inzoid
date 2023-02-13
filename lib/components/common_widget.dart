@@ -17,6 +17,7 @@ class CommonWidget {
       List<TextInputFormatter>? inpuFormator,
       required TextEditingController controller,
       int? maxLength,
+      int? maxLine = 1,
       TextInputType? keyBoardType,
       bool isObscured = false,
       Widget? prefix,
@@ -27,6 +28,7 @@ class CommonWidget {
         obscureText: isObscured,
         inputFormatters: inpuFormator,
         maxLength: maxLength,
+        maxLines: maxLine,
         controller: controller,
         keyboardType: keyBoardType,
         style: TextStyle(

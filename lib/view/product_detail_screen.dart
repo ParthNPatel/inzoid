@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:inzoid/view/sign_in_screen.dart';
@@ -78,6 +79,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   bool isContainCheck = false;
 
   bool isDone = false;
+  double rating = 0;
 
   /// WhatsApp Share:
 
@@ -87,6 +89,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       text: "Hello Admin, Wanted to inquire about the product",
     ).toString());
   }
+
+  TextEditingController description = TextEditingController();
 
   @override
   void initState() {
@@ -409,155 +413,366 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   SizedBox(
                     height: 10.sp,
                   ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Column(
+                  StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection('ProductRating')
+                        .doc(widget.productData['productId'])
+                        .collection('Rating')
+                        .snapshots(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                            snapshot) {
+                      if (snapshot.hasData) {
+                        double everageRating1 = 0;
+                        List star1 = [];
+                        List star2 = [];
+                        List star3 = [];
+                        List star4 = [];
+                        List star5 = [];
+                        for (int i = 0; i < snapshot.data!.docs.length; i++) {
+                          everageRating1 += int.parse(snapshot
+                              .data!.docs[i]['rating']
+                              .toString()
+                              .split('.')
+                              .first);
+                          if (snapshot.data!.docs[i]['rating'] == 1) {
+                            star1.add(int.parse(snapshot.data!.docs[i]['rating']
+                                .toString()
+                                .split('.')
+                                .first));
+                          }
+                          if (snapshot.data!.docs[i]['rating'] == 2) {
+                            star2.add(int.parse(snapshot.data!.docs[i]['rating']
+                                .toString()
+                                .split('.')
+                                .first));
+                          }
+                          if (snapshot.data!.docs[i]['rating'] == 3) {
+                            star3.add(int.parse(snapshot.data!.docs[i]['rating']
+                                .toString()
+                                .split('.')
+                                .first));
+                          }
+                          if (snapshot.data!.docs[i]['rating'] == 4) {
+                            star4.add(int.parse(snapshot.data!.docs[i]['rating']
+                                .toString()
+                                .split('.')
+                                .first));
+                          }
+                          if (snapshot.data!.docs[i]['rating'] == 5) {
+                            star5.add(int.parse(snapshot.data!.docs[i]['rating']
+                                .toString()
+                                .split('.')
+                                .first));
+                          }
+                        }
+                        everageRating1 =
+                            everageRating1 / snapshot.data!.docs.length;
+                        var everageRating = everageRating1.toStringAsFixed(1);
+                        print(
+                            '----everageRating---${(star5.length / snapshot.data!.docs.length).runtimeType}');
+                        return Column(
                           children: [
                             Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                CommonText.textBoldWight500(
-                                    color: CommonColor.greyColor838589,
-                                    text: "5",
-                                    fontSize: 12.sp),
+                                Expanded(
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          CommonText.textBoldWight500(
+                                              color:
+                                                  CommonColor.greyColor838589,
+                                              text: "5",
+                                              fontSize: 12.sp),
+                                          SizedBox(
+                                            width: 5.sp,
+                                          ),
+                                          Expanded(
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(2),
+                                              child: LinearProgressIndicator(
+                                                color: Color(0xffFFB400),
+                                                backgroundColor:
+                                                    Colors.grey.shade200,
+                                                value: star5.length == 0
+                                                    ? 0.0
+                                                    : star5.length /
+                                                        snapshot
+                                                            .data!.docs.length,
+                                                minHeight: 8.sp,
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 10.sp,
+                                      ),
+                                      Row(
+                                        children: [
+                                          CommonText.textBoldWight500(
+                                              color:
+                                                  CommonColor.greyColor838589,
+                                              text: "4",
+                                              fontSize: 12.sp),
+                                          SizedBox(
+                                            width: 5.sp,
+                                          ),
+                                          Expanded(
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(2),
+                                              child: LinearProgressIndicator(
+                                                color: Color(0xffFFB400),
+                                                backgroundColor:
+                                                    Colors.grey.shade200,
+                                                value: star4.length == 0
+                                                    ? 0.0
+                                                    : star4.length /
+                                                        snapshot
+                                                            .data!.docs.length,
+                                                minHeight: 8.sp,
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 10.sp,
+                                      ),
+                                      Row(
+                                        children: [
+                                          CommonText.textBoldWight500(
+                                              color:
+                                                  CommonColor.greyColor838589,
+                                              text: "3",
+                                              fontSize: 12.sp),
+                                          SizedBox(
+                                            width: 5.sp,
+                                          ),
+                                          Expanded(
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(2),
+                                              child: LinearProgressIndicator(
+                                                color: Color(0xffFFB400),
+                                                backgroundColor:
+                                                    Colors.grey.shade200,
+                                                value: star3.length == 0
+                                                    ? 0.0
+                                                    : star3.length /
+                                                        snapshot
+                                                            .data!.docs.length,
+                                                minHeight: 8.sp,
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 10.sp,
+                                      ),
+                                      Row(
+                                        children: [
+                                          CommonText.textBoldWight500(
+                                              color:
+                                                  CommonColor.greyColor838589,
+                                              text: "2",
+                                              fontSize: 12.sp),
+                                          SizedBox(
+                                            width: 5.sp,
+                                          ),
+                                          Expanded(
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(2),
+                                              child: LinearProgressIndicator(
+                                                color: Color(0xffFFB400),
+                                                backgroundColor:
+                                                    Colors.grey.shade200,
+                                                value: star2.length == 0
+                                                    ? 0.0
+                                                    : star2.length /
+                                                        snapshot
+                                                            .data!.docs.length,
+                                                minHeight: 8.sp,
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 10.sp,
+                                      ),
+                                      Row(
+                                        children: [
+                                          CommonText.textBoldWight500(
+                                              color:
+                                                  CommonColor.greyColor838589,
+                                              text: "1",
+                                              fontSize: 12.sp),
+                                          SizedBox(
+                                            width: 5.sp,
+                                          ),
+                                          Expanded(
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(2),
+                                              child: LinearProgressIndicator(
+                                                color: Color(0xffFFB400),
+                                                backgroundColor:
+                                                    Colors.grey.shade200,
+                                                value: star1.length == 0
+                                                    ? 0.0
+                                                    : star1.length /
+                                                        snapshot
+                                                            .data!.docs.length,
+                                                minHeight: 8.sp,
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
                                 SizedBox(
                                   width: 5.sp,
                                 ),
-                                Expanded(
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(2),
-                                    child: LinearProgressIndicator(
-                                      color: Color(0xffFFB400),
-                                      backgroundColor: Colors.grey.shade200,
-                                      value: 1,
-                                      minHeight: 8.sp,
+                                Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        CommonText.textBoldWight700(
+                                            text: "${everageRating}",
+                                            fontSize: 15.sp),
+                                        Icon(
+                                          Icons.star,
+                                          size: 18.sp,
+                                          color: Color(0xffFFB400),
+                                        )
+                                      ],
                                     ),
-                                  ),
+                                    SizedBox(
+                                      height: 5.sp,
+                                    ),
+                                    CommonText.textBoldWight400(
+                                        text:
+                                            "${snapshot.data!.docs.length} Reviews",
+                                        fontSize: 12.sp,
+                                        color: Color(0xff5B5B5B)),
+                                    SizedBox(
+                                      height: 15.sp,
+                                    ),
+                                    CommonText.textBoldWight700(
+                                        text: "88%", fontSize: 15.sp),
+                                    SizedBox(
+                                      height: 5.sp,
+                                    ),
+                                    CommonText.textBoldWight400(
+                                        text: "Recommended",
+                                        fontSize: 12.sp,
+                                        color: Color(0xff5B5B5B)),
+                                  ],
                                 )
                               ],
                             ),
                             SizedBox(
-                              height: 10.sp,
+                              height: 21.sp,
                             ),
-                            Row(
-                              children: [
-                                CommonText.textBoldWight500(
-                                    color: CommonColor.greyColor838589,
-                                    text: "4",
-                                    fontSize: 12.sp),
-                                SizedBox(
-                                  width: 5.sp,
-                                ),
-                                Expanded(
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(2),
-                                    child: LinearProgressIndicator(
-                                      color: Color(0xffFFB400),
-                                      backgroundColor: Colors.grey.shade200,
-                                      value: 0.8,
-                                      minHeight: 8.sp,
-                                    ),
+                            InkWell(
+                              onTap: () async {
+                                await buildRatingShowDialog(context);
+                              },
+                              child: Container(
+                                  height: 40.sp,
+                                  width: Get.width,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(),
                                   ),
-                                )
-                              ],
+                                  child: Center(
+                                    child: CommonText.textBoldWight400(
+                                        text: "Write a review",
+                                        fontSize: 16.sp,
+                                        color: Color(0xff5B5B5B)),
+                                  )),
                             ),
                             SizedBox(
-                              height: 10.sp,
+                              height: 31.sp,
                             ),
-                            Row(
-                              children: [
-                                CommonText.textBoldWight500(
-                                    color: CommonColor.greyColor838589,
-                                    text: "3",
-                                    fontSize: 12.sp),
-                                SizedBox(
-                                  width: 5.sp,
-                                ),
-                                Expanded(
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(2),
-                                    child: LinearProgressIndicator(
-                                      color: Color(0xffFFB400),
-                                      backgroundColor: Colors.grey.shade200,
-                                      value: 0.6,
-                                      minHeight: 8.sp,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10.sp,
-                            ),
-                            Row(
-                              children: [
-                                CommonText.textBoldWight500(
-                                    color: CommonColor.greyColor838589,
-                                    text: "2",
-                                    fontSize: 12.sp),
-                                SizedBox(
-                                  width: 5.sp,
-                                ),
-                                Expanded(
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(2),
-                                    child: LinearProgressIndicator(
-                                      color: Color(0xffFFB400),
-                                      backgroundColor: Colors.grey.shade200,
-                                      value: 0.4,
-                                      minHeight: 8.sp,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10.sp,
-                            ),
-                            Row(
-                              children: [
-                                CommonText.textBoldWight500(
-                                    color: CommonColor.greyColor838589,
-                                    text: "1",
-                                    fontSize: 12.sp),
-                                SizedBox(
-                                  width: 5.sp,
-                                ),
-                                Expanded(
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(2),
-                                    child: LinearProgressIndicator(
-                                      color: Color(0xffFFB400),
-                                      backgroundColor: Colors.grey.shade200,
-                                      value: 0.2,
-                                      minHeight: 8.sp,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
+                            ListView.separated(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  var data = snapshot.data!.docs[index];
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(1000),
+                                            child: Image.network(
+                                              '${data['image']}',
+                                              height: 32.sp,
+                                              width: 32.sp,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          CommonText.textBoldWight500(
+                                            text: "${data['name']}",
+                                            fontSize: 13.sp,
+                                            color: Colors.black,
+                                          ),
+                                          Spacer(),
+                                          RatingBarIndicator(
+                                            rating: double.parse(
+                                                data['rating'].toString()),
+                                            itemBuilder: (context, index) =>
+                                                Icon(
+                                              Icons.star,
+                                              color: Colors.amber,
+                                            ),
+                                            itemCount: 5,
+                                            itemSize: 16.sp,
+                                            direction: Axis.horizontal,
+                                          ),
+                                        ],
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 40.sp),
+                                        child: CommonText.textBoldWight400(
+                                          text: "${data['des']}",
+                                          fontSize: 12.sp,
+                                          color: Color(0xff5B5B5B),
+                                        ),
+                                      )
+                                    ],
+                                  );
+                                },
+                                separatorBuilder: (context, index) {
+                                  return Divider();
+                                },
+                                itemCount: snapshot.data!.docs.length),
                           ],
-                        ),
-                      ),
-                      SizedBox(
-                        width: 5.sp,
-                      ),
-                      Row(
-                        children: [
-                          CommonText.textBoldWight700(
-                              text: "4.5", fontSize: 15.sp),
-                          Icon(
-                            Icons.star,
-                            size: 18.sp,
-                            color: Color(0xffFFB400),
-                          )
-                        ],
-                      )
-                    ],
+                        );
+                      } else {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                    },
                   ),
                   SizedBox(
-                    height: 15.sp,
+                    height: 20.sp,
                   ),
                   CommonText.textBoldWight700(
                       text: "Similar Products", fontSize: 15.sp),
@@ -645,6 +860,168 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
+  buildRatingShowDialog(BuildContext context) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.black12,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setStat) {
+            return Scaffold(
+              backgroundColor: Colors.transparent,
+              body: Center(
+                child: Container(
+                  height: 380,
+                  width: 350,
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(17),
+                          color: Colors.teal,
+                          child: Stack(
+                            alignment: Alignment.topRight,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  Get.back();
+                                  setStat(() {
+                                    rating = 0;
+                                  });
+                                },
+                                child: CircleAvatar(
+                                  radius: 10,
+                                  backgroundColor: Colors.white,
+                                  child: FittedBox(
+                                    child: Icon(
+                                      Icons.clear,
+                                      color: Colors.teal,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Review',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              RatingBar.builder(
+                                initialRating: rating,
+                                minRating: 1,
+                                direction: Axis.horizontal,
+                                allowHalfRating: false,
+                                itemCount: 5,
+                                itemPadding:
+                                    EdgeInsets.symmetric(horizontal: 4.0),
+                                itemBuilder: (context, _) => Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                ),
+                                onRatingUpdate: (value) {
+                                  setStat(() {
+                                    rating = value;
+                                  });
+                                },
+                              ),
+                              SizedBox(
+                                height: 20.sp,
+                              ),
+                              TextField(
+                                controller: description,
+                                maxLines: 5,
+                                decoration: InputDecoration(
+                                  border: outlineBorder,
+                                  focusedBorder: outlineBorder,
+                                  enabledBorder: outlineBorder,
+                                  fillColor: Colors.grey.shade50,
+                                  filled: true,
+                                  contentPadding: const EdgeInsets.only(
+                                    top: 25,
+                                    left: 10,
+                                  ),
+                                  hintText: 'Write here...',
+                                ),
+                              ),
+                              SizedBox(
+                                height: 20.sp,
+                              ),
+                              Align(
+                                  alignment: Alignment.center,
+                                  child: SizedBox(
+                                    height: 45.sp,
+                                    width: 200.sp,
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          primary: Colors.teal),
+                                      onPressed: () async {
+                                        await FirebaseFirestore.instance
+                                            .collection('ProductRating')
+                                            .doc(
+                                                widget.productData['productId'])
+                                            .collection('Rating')
+                                            .add({
+                                          'name':
+                                              GetStorageServices.getNameValue(),
+                                          'image': GetStorageServices
+                                              .getProfileImageValue(),
+                                          'des': description.text.toString(),
+                                          'rating': rating
+                                        });
+                                        Get.back();
+                                        rating = 0;
+                                        description.clear();
+                                      },
+                                      child: Text(
+                                        'Add',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  )),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  InputBorder outlineBorder = OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.grey.shade200),
+      borderRadius: BorderRadius.circular(7));
   Widget contactUsButton() {
     return MaterialButton(
       onPressed: () {

@@ -44,6 +44,7 @@ class _ProductTileState extends State<ProductTile> {
   Widget build(BuildContext context) {
     return Container(
       clipBehavior: Clip.antiAliasWithSaveLayer,
+      padding: EdgeInsets.only(bottom: 5),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
