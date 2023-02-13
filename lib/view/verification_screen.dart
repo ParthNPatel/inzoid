@@ -6,10 +6,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:inzoid/components/common_method.dart';
 import 'package:inzoid/constant/text_const.dart';
-import 'package:inzoid/view/update_password_screen.dart';
 import 'package:otp_text_field/otp_field_style.dart';
 import 'package:sizer/sizer.dart';
-import 'package:flutter/services.dart';
 import '../components/common_widget.dart';
 import '../constant/color_const.dart';
 import '../constant/const_size.dart';
@@ -17,7 +15,6 @@ import '../constant/image_const.dart';
 import '../constant/text_styel.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/style.dart';
-
 import '../get_storage_services/get_storage_service.dart';
 import 'bottom_bar_screen.dart';
 

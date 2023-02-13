@@ -19,6 +19,7 @@ class ProductTile extends StatefulWidget {
   final onTap;
   final stock;
   final int productID;
+  final bool? needBottomMargin;
   const ProductTile(
       {super.key,
       required this.image,
@@ -29,7 +30,8 @@ class ProductTile extends StatefulWidget {
       required this.oldPrice,
       required this.rating,
       required this.onTap,
-      this.stock});
+      this.stock,
+      this.needBottomMargin = false});
 
   @override
   State<ProductTile> createState() => _ProductTileState();
@@ -43,21 +45,30 @@ class _ProductTileState extends State<ProductTile> {
     return Container(
       clipBehavior: Clip.antiAliasWithSaveLayer,
       decoration: BoxDecoration(
+        color: Colors.white,
         borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.grey.shade200,
+              blurRadius: 10,
+              spreadRadius: 2,
+              offset: Offset(2, 2))
+        ],
         border: Border.all(color: CommonColor.greyColorD4D4D4, width: 1.6),
       ),
-      margin: EdgeInsets.only(right: 10),
+      margin: EdgeInsets.only(
+          right: 10, bottom: widget.needBottomMargin == true ? 15 : 0),
       child: Stack(
         alignment: Alignment.topRight,
         children: [
           Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               GestureDetector(
                 onTap: widget.onTap,
                 child: Container(
                   height: 145.sp,
-                  // width: 130.sp,
+                  width: 130.sp,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(10),
@@ -124,15 +135,15 @@ class _ProductTileState extends State<ProductTile> {
                   children: [
                     Image.asset(
                       ImageConst.piecs,
-                      height: 10.sp,
-                      width: 10.sp,
+                      height: 9.sp,
+                      width: 9.sp,
                     ),
                     SizedBox(
                       width: 5.sp,
                     ),
                     CommonText.textBoldWight700(
-                        text: '${widget.stock} Pieces IN STOCK',
-                        fontSize: 8.sp,
+                        text: '${widget.stock} PIECES IN STOCK',
+                        fontSize: 7.sp,
                         color: CommonColor.greyColor838589),
                   ],
                 ),

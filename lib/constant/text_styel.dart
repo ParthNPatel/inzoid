@@ -21,11 +21,13 @@ class CommonText {
       {required String text,
       double? fontSize,
       Color? color,
+      height = 0.0,
       TextDecoration textDecoration = TextDecoration.none,
       FontWeight fontWeight = FontWeight.w500}) {
     return Text(
       text,
       style: TextStyle(
+          height: height,
           fontWeight: fontWeight,
           decoration: textDecoration,
           fontSize: fontSize,

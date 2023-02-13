@@ -8,7 +8,9 @@ import 'package:inzoid/constant/text_const.dart';
 import 'package:inzoid/services/app_notification.dart';
 import 'package:inzoid/view/bottom_bar_screen.dart';
 import 'package:sizer/sizer.dart';
+import 'controller/bottom_bar_controller.dart';
 import 'controller/filter_screen_controller.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -17,6 +19,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await GetStorage.init();
+
+  await Permission.notification.isDenied.then((value) {
+    if (value) {
+      Permission.notification.request();
+    }
+  });
 
   flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
@@ -61,5 +69,6 @@ class BaseBindings extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut(() => FilterScreenController(), fenix: true);
+    Get.lazyPut(() => BottomBarController(), fenix: true);
   }
 }

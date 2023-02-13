@@ -121,6 +121,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             crossAxisSpacing: 10),
                         itemBuilder: (context, index) {
                           var data = properties[index];
+                          var fetchData = snapshot.data.docs![index];
                           return ProductTile(
                             onTap: () {
                               if (GetStorageServices.getUserLoggedInStatus() ==
@@ -135,10 +136,11 @@ class _SearchScreenState extends State<SearchScreen> {
                             image: data['listOfImage'][0],
                             title: data['productName'],
                             subtitle: data['brand'],
-                            price: data['price'],
+                            price: fetchData['price'],
                             oldPrice: data['oldPrice'],
                             rating: '(200 Ratings)',
                             productID: int.parse(data['productId']),
+                            needBottomMargin: true,
                           );
                         });
                   } else {

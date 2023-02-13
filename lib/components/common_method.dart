@@ -44,7 +44,7 @@ class CommonMethod {
         Get.off(BottomNavScreen());
       } catch (e) {
         log("Heyyyyy1111111111");
-        Get.off(SetProfileScreen());
+        Get.off(BottomNavScreen());
       }
     } catch (e) {
       try {
@@ -60,7 +60,7 @@ class CommonMethod {
           'is_Profile_check': true,
           'fcm_token': GetStorageServices.getFcmToken()
         });
-        Get.off(SetProfileScreen());
+        Get.off(BottomNavScreen());
       } catch (e) {
         print('ERROR IN lIKE NULL LIST');
       }

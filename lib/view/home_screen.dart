@@ -19,6 +19,7 @@ import '../constant/const_size.dart';
 import '../constant/image_const.dart';
 import '../constant/text_styel.dart';
 import 'package:get/get.dart';
+import '../controller/bottom_bar_controller.dart';
 import '../get_storage_services/get_storage_service.dart';
 import 'brand_mania_screen.dart';
 
@@ -29,6 +30,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int pageSelected = 0;
+
+  BottomBarController controller = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -690,9 +693,8 @@ class _HomeScreenState extends State<HomeScreen> {
       actions: [
         InkWell(
           onTap: () {
-            Get.off(() => BottomNavScreen(
-                  index: 1,
-                ));
+            print('Hey');
+            controller.updatePage(1);
           },
           child: CommonWidget.commonSvgPitcher(
               image: ImageConst.bell, height: 18.sp, width: 18.sp),

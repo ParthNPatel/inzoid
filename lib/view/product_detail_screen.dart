@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:inzoid/view/sign_in_screen.dart';
 import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:whatsapp_unilink/whatsapp_unilink.dart';
 import '../components/common_widget.dart';
 import '../components/product_tile.dart';
 import '../constant/color_const.dart';
@@ -77,6 +78,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   bool isContainCheck = false;
 
   bool isDone = false;
+
+  /// WhatsApp Share:
+
+  void launchWhatsapp() {
+    launch(WhatsAppUnilink(
+      phoneNumber: "919999713112",
+      text: "Hello Admin, Wanted to inquire about the product",
+    ).toString());
+  }
 
   @override
   void initState() {
@@ -158,6 +168,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           SizedBox(width: 7)
         ],
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: contactUsButton(),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -239,45 +251,31 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   SizedBox(
                     height: 2.h,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: List.generate(
-                                5,
-                                (index) => Icon(
-                                      Icons.star,
-                                      size: 19.sp,
-                                      color: CommonColor.yellowColor,
-                                    )),
-                          ),
-                          SizedBox(
-                            height: 5.sp,
-                          ),
-                          CommonText.textBoldWight400(
-                              text: "(200 Ratings)",
-                              fontSize: 6.sp,
-                              color: CommonColor.greyColor838589),
-                        ],
+                      CommonText.textBoldWight700(
+                          text: "₹${widget.productData['price']}",
+                          fontSize: 12.sp),
+                      SizedBox(
+                        height: 5.sp,
                       ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      Row(
                         children: [
-                          CommonText.textBoldWight700(
-                              text: "${widget.productData['price']}",
-                              fontSize: 12.sp),
+                          Image.asset(
+                            ImageConst.piecs,
+                            height: 10.sp,
+                            width: 10.sp,
+                          ),
                           SizedBox(
-                            width: 2.w,
+                            width: 5.sp,
                           ),
                           CommonText.textBoldWight700(
-                              color: CommonColor.greyColorD9D9D9,
-                              textDecoration: TextDecoration.lineThrough,
-                              text: "${widget.productData['oldPrice']}",
-                              fontSize: 12.sp),
+                              text:
+                                  '${widget.productData['quantity']} PIECES IN STOCK',
+                              fontSize: 8.sp,
+                              color: CommonColor.greyColor838589),
                         ],
                       ),
                     ],
@@ -346,15 +344,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     height: 15.sp,
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       CommonText.textBoldWight700(
-                          text: "Description", fontSize: 15.sp),
-                      SvgPicture.asset(
-                        ImageConst.arrowUp,
-                        height: 8.sp,
-                        width: 8.sp,
-                      )
+                          text: "Product Details", fontSize: 15.sp),
                     ],
                   ),
                   SizedBox(
@@ -365,7 +358,206 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       text: "${widget.productData['description']}",
                       fontSize: 12.sp),
                   SizedBox(
-                    height: 7.sp,
+                    height: 15.sp,
+                  ),
+                  CommonText.textBoldWight700(
+                      text: "Size & Fit", fontSize: 15.sp),
+                  SizedBox(
+                    height: 10.sp,
+                  ),
+                  CommonText.textBoldWight500(
+                      color: CommonColor.greyColor838589,
+                      text: "The model (height 6') is wearing a size M",
+                      fontSize: 12.sp),
+                  SizedBox(
+                    height: 15.sp,
+                  ),
+                  CommonText.textBoldWight700(
+                      text: "Material & Care", fontSize: 15.sp),
+                  SizedBox(
+                    height: 10.sp,
+                  ),
+                  CommonText.textBoldWight500(
+                      color: CommonColor.greyColor838589,
+                      text: "Material: 60% cotton, 40% polyesterMachine Wash",
+                      fontSize: 12.sp),
+                  SizedBox(
+                    height: 15.sp,
+                  ),
+                  CommonText.textBoldWight700(
+                      text: "Specifications", fontSize: 15.sp),
+                  SizedBox(
+                    height: 10.sp,
+                  ),
+                  CommonText.textBoldWight500(
+                      color: CommonColor.greyColor838589,
+                      text:
+                          "Specifications: Long Sleeves\nNeck: Round Neck\nPattern: Colourblocked\nLength: Regular\nType: Pullover\nPrint or Pattern Type: Colourblocked\nOccasion: Casual\nHemline: Straight",
+                      fontSize: 12.sp),
+                  SizedBox(
+                    height: 15.sp,
+                  ),
+                  CommonText.textBoldWight700(
+                      text: "Rating & Reviews", fontSize: 15.sp),
+                  SizedBox(
+                    height: 10.sp,
+                  ),
+                  CommonText.textBoldWight500(
+                      color: CommonColor.greyColor838589,
+                      text: "Summary",
+                      fontSize: 12.sp),
+                  SizedBox(
+                    height: 10.sp,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                CommonText.textBoldWight500(
+                                    color: CommonColor.greyColor838589,
+                                    text: "5",
+                                    fontSize: 12.sp),
+                                SizedBox(
+                                  width: 5.sp,
+                                ),
+                                Expanded(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(2),
+                                    child: LinearProgressIndicator(
+                                      color: Color(0xffFFB400),
+                                      backgroundColor: Colors.grey.shade200,
+                                      value: 1,
+                                      minHeight: 8.sp,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10.sp,
+                            ),
+                            Row(
+                              children: [
+                                CommonText.textBoldWight500(
+                                    color: CommonColor.greyColor838589,
+                                    text: "4",
+                                    fontSize: 12.sp),
+                                SizedBox(
+                                  width: 5.sp,
+                                ),
+                                Expanded(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(2),
+                                    child: LinearProgressIndicator(
+                                      color: Color(0xffFFB400),
+                                      backgroundColor: Colors.grey.shade200,
+                                      value: 0.8,
+                                      minHeight: 8.sp,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10.sp,
+                            ),
+                            Row(
+                              children: [
+                                CommonText.textBoldWight500(
+                                    color: CommonColor.greyColor838589,
+                                    text: "3",
+                                    fontSize: 12.sp),
+                                SizedBox(
+                                  width: 5.sp,
+                                ),
+                                Expanded(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(2),
+                                    child: LinearProgressIndicator(
+                                      color: Color(0xffFFB400),
+                                      backgroundColor: Colors.grey.shade200,
+                                      value: 0.6,
+                                      minHeight: 8.sp,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10.sp,
+                            ),
+                            Row(
+                              children: [
+                                CommonText.textBoldWight500(
+                                    color: CommonColor.greyColor838589,
+                                    text: "2",
+                                    fontSize: 12.sp),
+                                SizedBox(
+                                  width: 5.sp,
+                                ),
+                                Expanded(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(2),
+                                    child: LinearProgressIndicator(
+                                      color: Color(0xffFFB400),
+                                      backgroundColor: Colors.grey.shade200,
+                                      value: 0.4,
+                                      minHeight: 8.sp,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10.sp,
+                            ),
+                            Row(
+                              children: [
+                                CommonText.textBoldWight500(
+                                    color: CommonColor.greyColor838589,
+                                    text: "1",
+                                    fontSize: 12.sp),
+                                SizedBox(
+                                  width: 5.sp,
+                                ),
+                                Expanded(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(2),
+                                    child: LinearProgressIndicator(
+                                      color: Color(0xffFFB400),
+                                      backgroundColor: Colors.grey.shade200,
+                                      value: 0.2,
+                                      minHeight: 8.sp,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: 5.sp,
+                      ),
+                      Row(
+                        children: [
+                          CommonText.textBoldWight700(
+                              text: "4.5", fontSize: 15.sp),
+                          Icon(
+                            Icons.star,
+                            size: 18.sp,
+                            color: Color(0xffFFB400),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15.sp,
                   ),
                   CommonText.textBoldWight700(
                       text: "Similar Products", fontSize: 15.sp),
@@ -437,23 +629,39 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ],
               ),
             ),
-            CommonWidget.commonSizedBox(height: 14),
-            Center(
-              child: CommonText.textBoldWight500(
-                  text: 'Did you like the Product?',
-                  color: Colors.black,
-                  fontSize: 18.sp),
+            // CommonWidget.commonSizedBox(height: 14),
+            // Center(
+            //   child: CommonText.textBoldWight500(
+            //       text: 'Did you like the Product?',
+            //       color: Colors.black,
+            //       fontSize: 18.sp),
+            // ),
+            SizedBox(
+              height: 55.sp,
             ),
-            CommonWidget.commonSizedBox(height: 14),
-            Padding(
-              padding:
-                  EdgeInsets.symmetric(horizontal: CommonSize.screenPadding),
-              child:
-                  CommonWidget.commonButton(onTap: () {}, text: 'Contact Us'),
-            ),
-            CommonWidget.commonSizedBox(height: 30),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget contactUsButton() {
+    return MaterialButton(
+      onPressed: () {
+        launchWhatsapp();
+      },
+      color: CommonColor.themColor309D9D,
+      height: 45.sp,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset("assets/image/whatsapp.png", height: 30.sp, width: 30.sp),
+          SizedBox(
+            width: 10.sp,
+          ),
+          CommonText.textBoldWight600(
+              text: "Contact us", color: Colors.white, fontSize: 12.sp)
+        ],
       ),
     );
   }
@@ -537,7 +745,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         Row(
           children: List.generate(sizeList.length, (index) {
             return Padding(
-              padding: EdgeInsets.all(8.sp),
+              padding: EdgeInsets.only(
+                right: 8.sp,
+                top: 8.sp,
+                bottom: 8.sp,
+              ),
               child: GestureDetector(
                 onTap: () {},
                 child: Container(

@@ -10,6 +10,7 @@ import 'package:inzoid/view/home_screen.dart';
 import 'package:inzoid/view/product_detail_screen.dart';
 import 'package:inzoid/view/profile_screen.dart';
 import 'package:inzoid/view/sign_in_screen.dart';
+import '../controller/bottom_bar_controller.dart';
 import '../get_storage_services/get_storage_service.dart';
 import '../main.dart';
 import '../services/app_notification.dart';
@@ -34,6 +35,8 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
   ];
 
   int pageSelected = 0;
+
+  BottomBarController controller = Get.find();
 
   void initialize() async {
     FirebaseMessaging.onBackgroundMessage(
@@ -104,88 +107,91 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: pageSelected == 0
-          ? HomeScreen()
-          : pageSelected == 1
-              ? NotificationScreen()
-              : pageSelected == 2
-                  ? MyWishListPage()
-                  : ProfileScreen(),
-      // if (pageSelected == 0) HomeScreen(),
-      // if (pageSelected == 1) Center(child: Text("Notifications")),
-      // if (pageSelected == 2) Center(child: Text("Favourite")),
-      // if (pageSelected == 3) Center(child: Text("Profile")),
-      bottomNavigationBar: Container(
-        //height: 100,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: List.generate(
-            bottomItems.length,
-            (index) => Padding(
-              padding: EdgeInsets.symmetric(vertical: 8),
-              child: InkWell(
-                splashColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-                onTap: () {
-                  if (GetStorageServices.getUserLoggedInStatus() == true ||
-                      index == 0) {
-                    pageSelected = index;
-                    setState(() {});
-                  } else {
-                    Get.to(() => SignInScreen());
-                  }
-                },
-                child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        bottomItems[index]['icon'],
-                        color: pageSelected == index
-                            ? themColors309D9D
-                            : Color(0xffCFCFCF),
-                      ),
-                      SizedBox(
-                        height: 2,
-                      ),
-                      Text(
-                        bottomItems[index]['label'],
-                        style: TextStyle(
-                            color: pageSelected == index
-                                ? Colors.black
-                                : Color(0xffCFCFCF)),
-                      )
-                    ]),
+        body: GetBuilder<BottomBarController>(
+          builder: (controller) => controller.pageSelected == 0
+              ? HomeScreen()
+              : controller.pageSelected == 1
+                  ? NotificationScreen()
+                  : controller.pageSelected == 2
+                      ? MyWishListPage()
+                      : ProfileScreen(),
+        ),
+        // if (pageSelected == 0) HomeScreen(),
+        // if (pageSelected == 1) Center(child: Text("Notifications")),
+        // if (pageSelected == 2) Center(child: Text("Favourite")),
+        // if (pageSelected == 3) Center(child: Text("Profile")),
+        bottomNavigationBar: GetBuilder<BottomBarController>(
+          builder: (controller) => Container(
+            //height: 100,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: List.generate(
+                bottomItems.length,
+                (index) => Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  child: InkWell(
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    onTap: () {
+                      if (GetStorageServices.getUserLoggedInStatus() == true ||
+                          index == 0) {
+                        controller.updatePage(index);
+                      } else {
+                        Get.to(() => SignInScreen());
+                      }
+                    },
+                    child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(
+                            bottomItems[index]['icon'],
+                            color: controller.pageSelected == index
+                                ? themColors309D9D
+                                : Color(0xffCFCFCF),
+                          ),
+                          SizedBox(
+                            height: 2,
+                          ),
+                          Text(
+                            bottomItems[index]['label'],
+                            style: TextStyle(
+                                color: controller.pageSelected == index
+                                    ? Colors.black
+                                    : Color(0xffCFCFCF)),
+                          )
+                        ]),
+                  ),
+                ),
               ),
             ),
           ),
-        ),
-      ),
-      // bottomNavigationBar: BottomNavigationBar(
-      //   elevation: 0,
-      //   backgroundColor: Colors.transparent,
-      //   currentIndex: pageSelected,
-      //   onTap: (value) {
-      //     setState(() {
-      //       pageSelected = value;
-      //     });
-      //   },
-      //   selectedItemColor: themColors309D9D,
-      //   unselectedItemColor: Color(0xffCFCFCF),
-      //   type: BottomNavigationBarType.fixed,
-      //   items: List.generate(
-      //     bottomItems.length,
-      //     (index) => BottomNavigationBarItem(
-      //       icon: SvgPicture.asset(
-      //         bottomItems[index]['icon'],
-      //         color:
-      //             pageSelected == index ? themColors309D9D : Color(0xffCFCFCF),
-      //       ),
-      //       label: bottomItems[index]['label'],
-      //     ),
-      //   ),
-      // ),
-    );
+        )
+        // bottomNavigationBar: BottomNavigationBar(
+        //   elevation: 0,
+        //   backgroundColor: Colors.transparent,
+        //   currentIndex: pageSelected,
+        //   onTap: (value) {
+        //     setState(() {
+        //       pageSelected = value;
+        //     });
+        //   },
+        //   selectedItemColor: themColors309D9D,
+        //   unselectedItemColor: Color(0xffCFCFCF),
+        //   type: BottomNavigationBarType.fixed,
+        //   items: List.generate(
+        //     bottomItems.length,
+        //     (index) => BottomNavigationBarItem(
+        //       icon: SvgPicture.asset(
+        //         bottomItems[index]['icon'],
+        //         color:
+        //             pageSelected == index ? themColors309D9D : Color(0xffCFCFCF),
+        //       ),
+        //       label: bottomItems[index]['label'],
+        //     ),
+        //   ),
+        // ),
+        );
   }
 }
