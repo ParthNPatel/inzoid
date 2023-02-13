@@ -130,7 +130,8 @@ class _FilterScreenState extends State<FilterScreen> {
                           padding: EdgeInsets.all(8.sp),
                           child: GestureDetector(
                             onTap: () {
-                              controller.setIndexOfMaterialColor(index);
+                              controller.setIndexOfMaterialColor(
+                                  index, materialList[index]);
                             },
                             child: Container(
                               padding: EdgeInsets.symmetric(horizontal: 8),
@@ -164,7 +165,12 @@ class _FilterScreenState extends State<FilterScreen> {
                 padding:
                     EdgeInsets.symmetric(horizontal: CommonSize.screenPadding),
                 child: CommonWidget.commonButton(
-                    onTap: () {}, text: 'Show 248 items'),
+                    onTap: () {
+                      Get.back();
+
+                      setState(() {});
+                    },
+                    text: 'Show 248 items'),
               ),
               CommonWidget.commonSizedBox(height: 50),
             ]),
@@ -241,7 +247,7 @@ class _FilterScreenState extends State<FilterScreen> {
                 padding: EdgeInsets.all(8.sp),
                 child: GestureDetector(
                   onTap: () {
-                    controller.setIndexOfSeason(index);
+                    controller.setIndexOfSeason(index, seasonList[index]);
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 8),

@@ -8,14 +8,19 @@ class FilterScreenController extends GetxController {
   }
 
   int indexOfSize = 0;
+  // String indexOfSize = 0;
   setIndexOfSize(int index) {
     indexOfSize = index;
     update();
   }
 
   int indexOfSeason = 0;
-  setIndexOfSeason(int index) {
+  String? season;
+  setIndexOfSeason(int index, String name) {
     indexOfSeason = index;
+    if (name.isNotEmpty) {
+      season = name;
+    }
     update();
   }
 
@@ -26,8 +31,14 @@ class FilterScreenController extends GetxController {
   }
 
   int indexOfMaterialColor = 0;
-  setIndexOfMaterialColor(int index) {
+  String? materialName;
+  setIndexOfMaterialColor(int index, String name) {
     indexOfMaterialColor = index;
+    if (name.isNotEmpty) {
+      materialName = name;
+    }
+
+    print('------$name');
     update();
   }
 
@@ -35,6 +46,7 @@ class FilterScreenController extends GetxController {
   double rangeOfSlider1 = 100;
   setRangeOfSlider(double value) {
     rangeOfSlider = value;
+    print('-------rangeOfSlider----$rangeOfSlider');
     update();
   }
 

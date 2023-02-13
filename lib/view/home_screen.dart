@@ -205,6 +205,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         price: fetchMenData['price'],
                         oldPrice: fetchMenData['oldPrice'],
                         rating: "(200 Ratings)",
+                        stock: fetchMenData['quantity'],
                         onTap: () {
                           if (GetStorageServices.getUserLoggedInStatus() ==
                               true) {
@@ -295,6 +296,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           price: fetchMenData['price'],
                           oldPrice: fetchMenData['oldPrice'],
                           rating: "(200 Ratings)",
+                          stock: fetchMenData['quantity'],
                           onTap: () {
                             if (GetStorageServices.getUserLoggedInStatus() ==
                                 true) {
@@ -384,6 +386,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           price: fetchMenData['price'],
                           oldPrice: fetchMenData['oldPrice'],
                           rating: "(200 Ratings)",
+                          stock: fetchMenData['quantity'],
                           onTap: () {
                             if (GetStorageServices.getUserLoggedInStatus() ==
                                 true) {

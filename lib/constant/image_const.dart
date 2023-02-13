@@ -13,6 +13,7 @@ class ImageConst {
   static String kids = 'assets/image/kids.png';
   static String sportsWear = 'assets/image/sports_wear.png';
   static String banner = 'assets/image/banner.png';
+  static String piecs = 'assets/image/piecs.png';
 
   static String deal2 = 'assets/image/deal2.png';
   static String men2 = 'assets/image/men5.png';

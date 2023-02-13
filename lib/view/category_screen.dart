@@ -4,6 +4,7 @@ import 'package:inzoid/components/common_widget.dart';
 import 'package:inzoid/constant/color_const.dart';
 import 'package:inzoid/constant/const_size.dart';
 import 'package:inzoid/constant/text_styel.dart';
+import 'package:inzoid/controller/filter_screen_controller.dart';
 import 'package:inzoid/view/filter_screen.dart';
 import 'package:inzoid/view/product_detail_screen.dart';
 import 'package:inzoid/view/sign_in_screen.dart';
@@ -44,9 +45,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
   int categorySelected = 0;
 
   int pageSelected = 0;
-
+  FilterScreenController filterScreenController =
+      Get.put(FilterScreenController());
   @override
   Widget build(BuildContext context) {
+    print('---widget.category}----${widget.category}');
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -231,8 +234,15 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   .collection('Admin')
                   .doc('all_product')
                   .collection('product_data')
+                  // .where('price',
+                  //     isLessThanOrEqualTo: filterScreenController.rangeOfSlider)
+                  // .where('season', isEqualTo: filterScreenController.season)
+                  // .where('material',
+                  //     isEqualTo: filterScreenController.materialName)
+                  // .where('sizes', isEqualTo: null)
+                  // .where('color', isEqualTo: null)
                   .where('category', isEqualTo: '${widget.category}')
-                  .orderBy('create_time', descending: true)
+                  // .orderBy('create_time', descending: true)
                   .get(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
@@ -244,10 +254,14 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         shrinkWrap: true,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
-                            childAspectRatio: 2.sp / 3.7.sp,
+                            mainAxisSpacing: 17.sp,
+                            childAspectRatio: 2.2.sp / 3.7.sp,
                             crossAxisSpacing: 10),
                         itemBuilder: (context, index) {
                           var data = snapshot.data.docs[index];
+                          print('---data[price]---${data['price']}');
+                          print(
+                              '---filterScreenController.rangeOfSlider---${filterScreenController.rangeOfSlider.toStringAsFixed(0)}');
                           return ProductTile(
                             onTap: () {
                               if (GetStorageServices.getUserLoggedInStatus() ==
@@ -261,6 +275,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             },
                             image: data['listOfImage'][0],
                             title: data['productName'],
+                            stock: data['quantity'],
                             subtitle: data['brand'],
                             price: data['price'],
                             oldPrice: data['oldPrice'],

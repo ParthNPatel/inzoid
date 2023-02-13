@@ -35,13 +35,6 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
 
   int pageSelected = 0;
 
-  List<Widget> screens = [
-    HomeScreen(),
-    Center(child: Text("Notifications")),
-    MyWishListPage(),
-    ProfileScreen()
-  ];
-
   void initialize() async {
     FirebaseMessaging.onBackgroundMessage(
         AppNotificationHandler.firebaseMessagingBackgroundHandler);
