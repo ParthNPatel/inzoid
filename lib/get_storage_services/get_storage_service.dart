@@ -109,6 +109,42 @@ class GetStorageServices {
     return getStorage.read('end');
   }
 
+  /// COLOR
+  static setColor(Map color) {
+    getStorage.write('color', color);
+  }
+
+  static getColor() {
+    return getStorage.read('color');
+  }
+
+  /// COLOR
+  static setMaterial(Map material) {
+    getStorage.write('material', material);
+  }
+
+  static getMaterial() {
+    return getStorage.read('material');
+  }
+
+  /// SEASON
+  static setSeason(Map season) {
+    getStorage.write('season', season);
+  }
+
+  static getSeason() {
+    return getStorage.read('season');
+  }
+
+  /// SEASON
+  static setSize(Map size) {
+    getStorage.write('size', size);
+  }
+
+  static getSize() {
+    return getStorage.read('size');
+  }
+
   static logOut() {
     getStorage.remove('setIsEmailOrPhone');
     getStorage.remove('setMobile');
@@ -120,5 +156,8 @@ class GetStorageServices {
     getStorage.remove('setFullNameValue');
     getStorage.remove('start');
     getStorage.remove('end');
+    getStorage.remove('color');
+    getStorage.remove('season');
+    getStorage.remove('size');
   }
 }

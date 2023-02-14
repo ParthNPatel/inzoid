@@ -34,13 +34,24 @@ class _FilterScreenState extends State<FilterScreen> {
     '0xff934232',
     '0xff444B73',
   ];
-
+  Map colorData = {};
+  Map materialData = {};
+  Map seasonData = {};
+  Map sizeData = {};
   @override
   void initState() {
+    colorData = GetStorageServices.getColor();
+    materialData = GetStorageServices.getMaterial();
+    seasonData = GetStorageServices.getSeason();
+    sizeData = GetStorageServices.getSize();
     _filterScreenController.rangeOfSlider =
         double.parse(GetStorageServices.getStart().toString());
     _filterScreenController.rangeOfSlider1 =
         double.parse(GetStorageServices.getEnd().toString());
+    _filterScreenController.indexOfColor = colorData['index'];
+    _filterScreenController.indexOfMaterialColor = materialData['index'];
+    _filterScreenController.indexOfSeason = seasonData['index'];
+    _filterScreenController.indexOfSize = sizeData['index'];
 
     super.initState();
   }
@@ -49,6 +60,8 @@ class _FilterScreenState extends State<FilterScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
+        clearFilterOption();
+
         Get.off(() => CategoryScreen(
               category: '${widget.categories}',
             ));
@@ -360,20 +373,8 @@ class _FilterScreenState extends State<FilterScreen> {
         padding: const EdgeInsets.all(8.0),
         child: IconButton(
           onPressed: () {
-            _filterScreenController.startPrice = 0;
-            _filterScreenController.endPrice = 10000;
-            _filterScreenController.rangeOfSlider = 0;
-            _filterScreenController.rangeOfSlider1 = 10000;
-            _filterScreenController.sizeName = null;
-            _filterScreenController.indexOfSize = 0;
-            _filterScreenController.seasonName = null;
-            _filterScreenController.indexOfSeason = 0;
-            _filterScreenController.colorName = null;
-            _filterScreenController.indexOfColor = 0;
-            _filterScreenController.materialName = null;
-            _filterScreenController.indexOfMaterialColor = 0;
-            GetStorageServices.setStart(0);
-            GetStorageServices.setEnd(10000);
+            clearFilterOption();
+
             Get.back();
           },
           icon: Icon(
@@ -393,20 +394,8 @@ class _FilterScreenState extends State<FilterScreen> {
             children: [
               GestureDetector(
                 onTap: () {
-                  _filterScreenController.startPrice = 0;
-                  _filterScreenController.endPrice = 10000;
-                  _filterScreenController.rangeOfSlider = 0;
-                  _filterScreenController.rangeOfSlider1 = 10000;
-                  _filterScreenController.sizeName = null;
-                  _filterScreenController.indexOfSize = 0;
-                  _filterScreenController.seasonName = null;
-                  _filterScreenController.indexOfSeason = 0;
-                  _filterScreenController.colorName = null;
-                  _filterScreenController.indexOfColor = 0;
-                  _filterScreenController.materialName = null;
-                  _filterScreenController.indexOfMaterialColor = 0;
-                  GetStorageServices.setStart(0);
-                  GetStorageServices.setEnd(10000);
+                  clearFilterOption();
+
                   Get.back();
                 },
                 child: CommonText.textBoldWight500(
@@ -417,6 +406,27 @@ class _FilterScreenState extends State<FilterScreen> {
         )
       ],
     );
+  }
+
+  clearFilterOption() {
+    _filterScreenController.startPrice = 0;
+    _filterScreenController.endPrice = 10000;
+    _filterScreenController.rangeOfSlider = 0;
+    _filterScreenController.rangeOfSlider1 = 10000;
+    _filterScreenController.sizeName = null;
+    _filterScreenController.indexOfSize = 0;
+    _filterScreenController.seasonName = null;
+    _filterScreenController.indexOfSeason = 0;
+    _filterScreenController.colorName = null;
+    _filterScreenController.indexOfColor = 0;
+    _filterScreenController.materialName = null;
+    _filterScreenController.indexOfMaterialColor = 0;
+    GetStorageServices.setStart(0);
+    GetStorageServices.setEnd(10000);
+    GetStorageServices.setColor({'color': null, 'index': -1});
+    GetStorageServices.setMaterial({'material': null, 'index': -1});
+    GetStorageServices.setSeason({'season': null, 'index': -1});
+    GetStorageServices.setSize({'size': null, 'index': -1});
   }
 
   Expanded sliderValue({double? sliderValue, required String formBy}) {

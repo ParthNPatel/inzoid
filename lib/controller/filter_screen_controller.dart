@@ -32,6 +32,7 @@ class FilterScreenController extends GetxController {
   setIndexOfColor(int index, String name) {
     indexOfColor = index;
     colorName = name;
+    GetStorageServices.setColor({'color': colorName, 'index': indexOfColor});
     print('--colorName---${colorName}');
     update();
   }
@@ -43,6 +44,8 @@ class FilterScreenController extends GetxController {
     if (name.isNotEmpty) {
       materialName = name;
     }
+    GetStorageServices.setMaterial(
+        {'material': name, 'index': indexOfMaterialColor});
 
     print('------$name');
     update();

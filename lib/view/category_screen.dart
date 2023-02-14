@@ -244,6 +244,19 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   if (snapshot.data!.docs.length != 0) {
                     return GetBuilder<FilterScreenController>(
                       builder: (filterScreenController) {
+                        var colorData = GetStorageServices.getColor();
+                        var seasonData = GetStorageServices.getSeason();
+                        var sizeData = GetStorageServices.getSize();
+                        var materialData = GetStorageServices.getMaterial();
+                        filterScreenController.startPrice =
+                            GetStorageServices.getStart();
+                        filterScreenController.endPrice =
+                            GetStorageServices.getEnd();
+                        filterScreenController.colorName =
+                            colorData['color'] ?? null;
+                        print(
+                            '----startPrice${filterScreenController.startPrice}');
+                        print('----endPrice${filterScreenController.endPrice}');
                         print(
                             '----filterScreenController.materialName==${filterScreenController.materialName}');
                         print(
@@ -252,13 +265,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             '----filterScreenController.sizeName---${filterScreenController.sizeName}');
                         print(
                             '----filterScreenController.colorName---${filterScreenController.colorName}');
-                        filterScreenController.startPrice =
-                            GetStorageServices.getStart();
-                        filterScreenController.endPrice =
-                            GetStorageServices.getEnd();
-                        print(
-                            '----startPrice${filterScreenController.startPrice}');
-                        print('----endPrice${filterScreenController.endPrice}');
                         return MasonryGridView.count(
                           // mainAxisSpacing: 20,
                           physics: NeverScrollableScrollPhysics(),
@@ -269,7 +275,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             var data = snapshot.data!.docs[index];
                             if (filterScreenController.startPrice == 0 &&
                                 filterScreenController.endPrice == 10000 &&
-                                filterScreenController.colorName == null) {
+                                filterScreenController.colorName == null &&
+                                filterScreenController.materialName == null &&
+                                filterScreenController.sizeName == null &&
+                                filterScreenController.seasonName == null) {
                               print('------0000');
                               return buildProductTile(snapshot, index, data);
                             } else if (data['price'] >

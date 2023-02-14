@@ -103,6 +103,11 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
     AppNotificationHandler.onMsgOpen();
     GetStorageServices.setStart(0);
     GetStorageServices.setEnd(10000);
+    GetStorageServices.setColor({'color': null, 'index': -1});
+    GetStorageServices.setMaterial({'material': null, 'index': -1});
+    GetStorageServices.setSeason({'season': null, 'index': -1});
+    GetStorageServices.setSize({'size': null, 'index': -1});
+
     super.initState();
   }
 
