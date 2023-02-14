@@ -118,10 +118,10 @@ class _SearchScreenState extends State<SearchScreen> {
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             childAspectRatio: 2.sp / 3.7.sp,
-                            crossAxisSpacing: 10),
+                            crossAxisSpacing: 0),
                         itemBuilder: (context, index) {
                           var data = properties[index];
-                          var fetchData = snapshot.data.docs![index];
+                          print("PRICE====>>${data['price']}");
                           return ProductTile(
                             onTap: () {
                               if (GetStorageServices.getUserLoggedInStatus() ==
@@ -136,8 +136,9 @@ class _SearchScreenState extends State<SearchScreen> {
                             image: data['listOfImage'][0],
                             title: data['productName'],
                             subtitle: data['brand'],
-                            price: fetchData['price'],
+                            price: data['price'].toString(),
                             oldPrice: data['oldPrice'],
+                            stock: data['quantity'],
                             rating: '(200 Ratings)',
                             productID: int.parse(data['productId']),
                             needBottomMargin: true,

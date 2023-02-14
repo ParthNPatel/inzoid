@@ -800,8 +800,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 2,
-                                  childAspectRatio: 2.sp / 3.8.sp,
-                                  crossAxisSpacing: 15),
+                                  childAspectRatio: 2.sp / 3.7.sp,
+                                  crossAxisSpacing: 0),
                           itemBuilder: (context, index) {
                             var fetchMenData = snapshot.data.docs![index];
 
@@ -831,8 +831,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               subtitle: fetchMenData['brand'],
                               price: fetchMenData['price'],
                               oldPrice: fetchMenData['oldPrice'],
+                              stock: fetchMenData['quantity'],
                               rating: "(200 Ratings)",
                               productID: int.parse(fetchMenData['productId']),
+                              needBottomMargin: true,
                             );
                           },
                         );
@@ -872,8 +874,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               backgroundColor: Colors.transparent,
               body: Center(
                 child: Container(
-                  height: 380,
-                  width: 350,
+                  height: 300.sp,
+                  width: 270.sp,
                   clipBehavior: Clip.antiAliasWithSaveLayer,
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -928,23 +930,25 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              RatingBar.builder(
-                                initialRating: rating,
-                                minRating: 1,
-                                direction: Axis.horizontal,
-                                allowHalfRating: false,
-                                itemCount: 5,
-                                itemPadding:
-                                    EdgeInsets.symmetric(horizontal: 4.0),
-                                itemBuilder: (context, _) => Icon(
-                                  Icons.star,
-                                  color: Colors.amber,
+                              Center(
+                                child: RatingBar.builder(
+                                  initialRating: rating,
+                                  minRating: 1,
+                                  direction: Axis.horizontal,
+                                  allowHalfRating: false,
+                                  itemCount: 5,
+                                  itemPadding:
+                                      EdgeInsets.symmetric(horizontal: 4.0),
+                                  itemBuilder: (context, _) => Icon(
+                                    Icons.star,
+                                    color: Colors.amber,
+                                  ),
+                                  onRatingUpdate: (value) {
+                                    setStat(() {
+                                      rating = value;
+                                    });
+                                  },
                                 ),
-                                onRatingUpdate: (value) {
-                                  setStat(() {
-                                    rating = value;
-                                  });
-                                },
                               ),
                               SizedBox(
                                 height: 20.sp,
@@ -971,8 +975,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               Align(
                                   alignment: Alignment.center,
                                   child: SizedBox(
-                                    height: 45.sp,
-                                    width: 200.sp,
+                                    height: 43.sp,
+                                    width: 180.sp,
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
                                           primary: Colors.teal),
@@ -995,7 +999,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                         description.clear();
                                       },
                                       child: Text(
-                                        'Add',
+                                        'Submit',
                                         style: TextStyle(
                                           fontSize: 18,
                                           color: Colors.white,

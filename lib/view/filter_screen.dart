@@ -5,7 +5,6 @@ import 'package:inzoid/constant/color_const.dart';
 import 'package:inzoid/constant/text_const.dart';
 import 'package:inzoid/view/category_screen.dart';
 import 'package:sizer/sizer.dart';
-
 import '../components/common_widget.dart';
 import '../constant/const_size.dart';
 import '../constant/text_styel.dart';
@@ -34,152 +33,164 @@ class _FilterScreenState extends State<FilterScreen> {
     '0xff934232',
     '0xff444B73',
   ];
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: buildAppBar(),
-      body: GetBuilder<FilterScreenController>(
-        builder: (controller) {
-          return SingleChildScrollView(
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Padding(
-                padding:
-                    EdgeInsets.symmetric(horizontal: CommonSize.screenPadding),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CommonWidget.commonSizedBox(height: 8),
-                    CommonText.textBoldWight500(
-                        text: TextConst.price,
-                        color: CommonColor.blackColor000000,
-                        fontSize: 18.sp),
-                    CommonWidget.commonSizedBox(height: 10),
-                    Row(
-                      children: [
-                        sliderValue(
-                            sliderValue: controller.rangeOfSlider,
-                            formBy: TextConst.from),
-                        CommonWidget.commonSizedBox(width: 8),
-                        sliderValue(
-                            sliderValue: controller.rangeOfSlider1,
-                            formBy: TextConst.by),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              SliderTheme(
-                data: SliderThemeData(
-                    trackHeight: 2.5,
-                    activeTrackColor: themColors309D9D,
-                    inactiveTrackColor: CommonColor.borderColorE3E5E6,
-                    thumbColor: themColors309D9D),
-                child: RangeSlider(
-                  values: RangeValues(
-                      controller.rangeOfSlider, controller.rangeOfSlider1),
-                  min: 0.0,
-                  max: 10000.0,
-                  // label: '${controller.rangeOfSlider.round()}',
-                  onChanged: (value) {
-                    controller.setRangeOfSlider(value.start);
-                    controller.setRangeOfSlider1(value.end);
-                  },
-                ),
-              ),
-              CommonWidget.commonSizedBox(height: 20),
-              Padding(
-                padding:
-                    EdgeInsets.symmetric(horizontal: CommonSize.screenPadding),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CommonText.textBoldWight500(
-                          text: TextConst.itemsOnSale,
-                          color: Colors.black,
-                          fontSize: 18.sp),
-                      CupertinoSwitch(
-                        value: controller.isSwitch,
-                        activeColor: themColors309D9D,
-                        onChanged: (value) {
-                          controller.setIsSwitch(value);
-                        },
-                      )
-                    ]),
-              ),
-              CommonWidget.commonSizedBox(height: 20),
-              widgetOfSize(controller),
-              CommonWidget.commonSizedBox(height: 20),
-              widgetOfSeason(controller),
-              CommonWidget.commonSizedBox(height: 10),
-              widgetOfColor(controller),
-              CommonWidget.commonSizedBox(height: 10),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 6),
-                child: Column(
+    return WillPopScope(
+      onWillPop: () async {
+        Get.off(() => CategoryScreen(
+              category: '${widget.categories}',
+            ));
+        return false;
+      },
+      child: Scaffold(
+        appBar: buildAppBar(),
+        body: GetBuilder<FilterScreenController>(
+          builder: (controller) {
+            return SingleChildScrollView(
+              child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8),
-                        child: CommonText.textBoldWight500(
-                            text: TextConst.material,
-                            color: Colors.black,
-                            fontSize: 18.sp)),
-                    CommonWidget.commonSizedBox(height: 14),
-                    Row(
-                      children: List.generate(materialList.length, (index) {
-                        return Padding(
-                          padding: EdgeInsets.all(8.sp),
-                          child: GestureDetector(
-                            onTap: () {
-                              controller.setIndexOfMaterialColor(
-                                  index, materialList[index]);
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 8),
-                              alignment: Alignment.center,
-                              height: 40.sp,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [
-                                    new BoxShadow(
-                                      color: Colors.black.withOpacity(0.1),
-                                      blurRadius: 1.0,
-                                    ),
-                                  ],
-                                  color: CommonColor.greyColorf2f4f5),
-                              child: CommonText.textBoldWight400(
-                                text: materialList[index],
-                                color: controller.indexOfMaterialColor == index
-                                    ? CommonColor.blackColor000000
-                                    : CommonColor.greyColor00003,
-                              ),
-                            ),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: CommonSize.screenPadding),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CommonWidget.commonSizedBox(height: 8),
+                          CommonText.textBoldWight500(
+                              text: TextConst.price,
+                              color: CommonColor.blackColor000000,
+                              fontSize: 18.sp),
+                          CommonWidget.commonSizedBox(height: 10),
+                          Row(
+                            children: [
+                              sliderValue(
+                                  sliderValue: controller.rangeOfSlider,
+                                  formBy: TextConst.from),
+                              CommonWidget.commonSizedBox(width: 8),
+                              sliderValue(
+                                  sliderValue: controller.rangeOfSlider1,
+                                  formBy: TextConst.by),
+                            ],
                           ),
-                        );
-                      }),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
-              ),
-              CommonWidget.commonSizedBox(height: 20),
-              Padding(
-                padding:
-                    EdgeInsets.symmetric(horizontal: CommonSize.screenPadding),
-                child: CommonWidget.commonButton(
-                    onTap: () {
-                      Get.off(() => CategoryScreen(
-                            category: '${widget.categories}',
-                          ));
-
-                      setState(() {});
-                    },
-                    text: 'Show items'),
-              ),
-              CommonWidget.commonSizedBox(height: 50),
-            ]),
-          );
-        },
+                    SliderTheme(
+                      data: SliderThemeData(
+                          trackHeight: 2.5,
+                          activeTrackColor: themColors309D9D,
+                          inactiveTrackColor: CommonColor.borderColorE3E5E6,
+                          thumbColor: themColors309D9D),
+                      child: RangeSlider(
+                        values: RangeValues(controller.rangeOfSlider,
+                            controller.rangeOfSlider1),
+                        min: 0.0,
+                        max: 10000.0,
+                        // label: '${controller.rangeOfSlider.round()}',
+                        onChanged: (value) {
+                          controller.setRangeOfSlider(value.start);
+                          controller.setRangeOfSlider1(value.end);
+                        },
+                      ),
+                    ),
+                    CommonWidget.commonSizedBox(height: 20),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: CommonSize.screenPadding),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            CommonText.textBoldWight500(
+                                text: TextConst.itemsOnSale,
+                                color: Colors.black,
+                                fontSize: 18.sp),
+                            CupertinoSwitch(
+                              value: controller.isSwitch,
+                              activeColor: themColors309D9D,
+                              onChanged: (value) {
+                                controller.setIsSwitch(value);
+                              },
+                            )
+                          ]),
+                    ),
+                    CommonWidget.commonSizedBox(height: 20),
+                    widgetOfSize(controller),
+                    CommonWidget.commonSizedBox(height: 20),
+                    widgetOfSeason(controller),
+                    CommonWidget.commonSizedBox(height: 10),
+                    widgetOfColor(controller),
+                    CommonWidget.commonSizedBox(height: 10),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 6),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8),
+                              child: CommonText.textBoldWight500(
+                                  text: TextConst.material,
+                                  color: Colors.black,
+                                  fontSize: 18.sp)),
+                          CommonWidget.commonSizedBox(height: 14),
+                          Row(
+                            children:
+                                List.generate(materialList.length, (index) {
+                              return Padding(
+                                padding: EdgeInsets.all(8.sp),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    controller.setIndexOfMaterialColor(
+                                        index, materialList[index]);
+                                  },
+                                  child: Container(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8),
+                                    alignment: Alignment.center,
+                                    height: 40.sp,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        boxShadow: [
+                                          new BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.1),
+                                            blurRadius: 1.0,
+                                          ),
+                                        ],
+                                        color: CommonColor.greyColorf2f4f5),
+                                    child: CommonText.textBoldWight400(
+                                      text: materialList[index],
+                                      color: controller.indexOfMaterialColor ==
+                                              index
+                                          ? CommonColor.blackColor000000
+                                          : CommonColor.greyColor00003,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }),
+                          ),
+                        ],
+                      ),
+                    ),
+                    CommonWidget.commonSizedBox(height: 20),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: CommonSize.screenPadding),
+                      child: CommonWidget.commonButton(
+                          onTap: () {
+                            Get.off(() => CategoryScreen(
+                                  category: '${widget.categories}',
+                                ));
+                          },
+                          text: 'Show items'),
+                    ),
+                    CommonWidget.commonSizedBox(height: 50),
+                  ]),
+            );
+          },
+        ),
       ),
     );
   }

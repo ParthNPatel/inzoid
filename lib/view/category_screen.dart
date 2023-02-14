@@ -482,7 +482,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
         children: [
           InkWell(
             onTap: () {
-              Get.to(() => FilterScreen(
+              Get.off(() => FilterScreen(
                     categories: widget.category,
                   ));
             },

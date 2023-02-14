@@ -108,20 +108,6 @@ class _ProductTileState extends State<ProductTile> {
                   ),
                 ),
               ),
-
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              //   children: [
-              //     // SizedBox(
-              //     //   width: 2.w,
-              //     // ),
-              //     // CommonText.textBoldWight700(
-              //     //     color: CommonColor.greyColorD9D9D9,
-              //     //     textDecoration: TextDecoration.lineThrough,
-              //     //     text: widget.oldPrice,
-              //     //     fontSize: 10.sp),
-              //   ],
-              // ),
               SizedBox(
                 height: 2.sp,
               ),
