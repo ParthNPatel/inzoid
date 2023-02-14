@@ -115,6 +115,10 @@ class _ProductTileState extends State<ProductTile> {
                 thickness: 1.5,
                 color: Color(0xffD4D4D4),
               ),
+              // Container(
+              //   height: 1.5,
+              //   color: Color(0xffD4D4D4),
+              // ),
 
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8.sp),

@@ -200,25 +200,28 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemBuilder: (context, index) {
                       var fetchMenData = snapshot.data.docs![index];
                       print('material  ${fetchMenData['material']}');
-                      return ProductTile(
-                        productID: int.parse(fetchMenData['productId']),
-                        image: fetchMenData['listOfImage'][0],
-                        title: fetchMenData['productName'],
-                        subtitle: fetchMenData['brand'],
-                        price: fetchMenData['price'],
-                        oldPrice: fetchMenData['oldPrice'],
-                        rating: "(200 Ratings)",
-                        stock: fetchMenData['quantity'],
-                        onTap: () {
-                          if (GetStorageServices.getUserLoggedInStatus() ==
-                              true) {
-                            Get.to(() => ProductDetailScreen(
-                                  productData: fetchMenData,
-                                ));
-                          } else {
-                            Get.to(() => SignInScreen());
-                          }
-                        },
+                      return SizedBox(
+                        width: 130.sp,
+                        child: ProductTile(
+                          productID: int.parse(fetchMenData['productId']),
+                          image: fetchMenData['listOfImage'][0],
+                          title: fetchMenData['productName'],
+                          subtitle: fetchMenData['brand'],
+                          price: fetchMenData['price'],
+                          oldPrice: fetchMenData['oldPrice'],
+                          rating: "(200 Ratings)",
+                          stock: fetchMenData['quantity'],
+                          onTap: () {
+                            if (GetStorageServices.getUserLoggedInStatus() ==
+                                true) {
+                              Get.to(() => ProductDetailScreen(
+                                    productData: fetchMenData,
+                                  ));
+                            } else {
+                              Get.to(() => SignInScreen());
+                            }
+                          },
+                        ),
                       );
                     },
                   );
@@ -291,25 +294,28 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemBuilder: (context, index) {
                       var fetchMenData = snapshot.data.docs![index];
                       print('material  ${fetchMenData['material']}');
-                      return ProductTile(
-                          productID: int.parse(fetchMenData['productId']),
-                          image: fetchMenData['listOfImage'][0],
-                          title: fetchMenData['productName'],
-                          subtitle: fetchMenData['brand'],
-                          price: fetchMenData['price'],
-                          oldPrice: fetchMenData['oldPrice'],
-                          rating: "(200 Ratings)",
-                          stock: fetchMenData['quantity'],
-                          onTap: () {
-                            if (GetStorageServices.getUserLoggedInStatus() ==
-                                true) {
-                              Get.to(() => ProductDetailScreen(
-                                    productData: fetchMenData,
-                                  ));
-                            } else {
-                              Get.to(() => SignInScreen());
-                            }
-                          });
+                      return SizedBox(
+                        width: 130.sp,
+                        child: ProductTile(
+                            productID: int.parse(fetchMenData['productId']),
+                            image: fetchMenData['listOfImage'][0],
+                            title: fetchMenData['productName'],
+                            subtitle: fetchMenData['brand'],
+                            price: fetchMenData['price'],
+                            oldPrice: fetchMenData['oldPrice'],
+                            rating: "(200 Ratings)",
+                            stock: fetchMenData['quantity'],
+                            onTap: () {
+                              if (GetStorageServices.getUserLoggedInStatus() ==
+                                  true) {
+                                Get.to(() => ProductDetailScreen(
+                                      productData: fetchMenData,
+                                    ));
+                              } else {
+                                Get.to(() => SignInScreen());
+                              }
+                            }),
+                      );
                     },
                   );
                 } else {
@@ -381,25 +387,28 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemBuilder: (context, index) {
                       var fetchMenData = snapshot.data.docs![index];
                       print('material  ${fetchMenData['material']}');
-                      return ProductTile(
-                          productID: int.parse(fetchMenData['productId']),
-                          image: fetchMenData['listOfImage'][0],
-                          title: fetchMenData['productName'],
-                          subtitle: fetchMenData['brand'],
-                          price: fetchMenData['price'],
-                          oldPrice: fetchMenData['oldPrice'],
-                          rating: "(200 Ratings)",
-                          stock: fetchMenData['quantity'],
-                          onTap: () {
-                            if (GetStorageServices.getUserLoggedInStatus() ==
-                                true) {
-                              Get.to(() => ProductDetailScreen(
-                                    productData: fetchMenData,
-                                  ));
-                            } else {
-                              Get.to(() => SignInScreen());
-                            }
-                          });
+                      return SizedBox(
+                        width: 130.sp,
+                        child: ProductTile(
+                            productID: int.parse(fetchMenData['productId']),
+                            image: fetchMenData['listOfImage'][0],
+                            title: fetchMenData['productName'],
+                            subtitle: fetchMenData['brand'],
+                            price: fetchMenData['price'],
+                            oldPrice: fetchMenData['oldPrice'],
+                            rating: "(200 Ratings)",
+                            stock: fetchMenData['quantity'],
+                            onTap: () {
+                              if (GetStorageServices.getUserLoggedInStatus() ==
+                                  true) {
+                                Get.to(() => ProductDetailScreen(
+                                      productData: fetchMenData,
+                                    ));
+                              } else {
+                                Get.to(() => SignInScreen());
+                              }
+                            }),
+                      );
                     },
                   );
                 } else {
