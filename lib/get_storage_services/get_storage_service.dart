@@ -91,6 +91,24 @@ class GetStorageServices {
     return getStorage.read('fcmToken');
   }
 
+  /// StartPrice
+  static setStart(int start) {
+    getStorage.write('start', start);
+  }
+
+  static getStart() {
+    return getStorage.read('start');
+  }
+
+  /// End price
+  static setEnd(int end) {
+    getStorage.write('end', end);
+  }
+
+  static getEnd() {
+    return getStorage.read('end');
+  }
+
   static logOut() {
     getStorage.remove('setIsEmailOrPhone');
     getStorage.remove('setMobile');
@@ -100,5 +118,7 @@ class GetStorageServices {
     getStorage.remove('username');
     getStorage.remove('isUserLoggedIn');
     getStorage.remove('setFullNameValue');
+    getStorage.remove('start');
+    getStorage.remove('end');
   }
 }

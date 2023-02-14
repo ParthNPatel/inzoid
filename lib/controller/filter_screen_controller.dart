@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:inzoid/get_storage_services/get_storage_service.dart';
 
 class FilterScreenController extends GetxController {
   bool isSwitch = false;
@@ -55,6 +56,7 @@ class FilterScreenController extends GetxController {
   setRangeOfSlider(double value) {
     rangeOfSlider = value;
     startPrice = int.parse(rangeOfSlider.toStringAsFixed(0));
+    GetStorageServices.setStart(startPrice!);
     print('-------rangeOfSlider1----$startPrice');
     update();
   }
@@ -62,6 +64,8 @@ class FilterScreenController extends GetxController {
   setRangeOfSlider1(double value) {
     rangeOfSlider1 = value;
     endPrice = int.parse(rangeOfSlider1.toStringAsFixed(0));
+    GetStorageServices.setEnd(endPrice!);
+
     print('-------rangeOfSlider----$endPrice');
 
     update();

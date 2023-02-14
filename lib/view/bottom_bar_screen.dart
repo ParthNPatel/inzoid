@@ -101,6 +101,8 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
     AppNotificationHandler.getInitialMsg();
     AppNotificationHandler.showMsgHandler();
     AppNotificationHandler.onMsgOpen();
+    GetStorageServices.setStart(0);
+    GetStorageServices.setEnd(10000);
     super.initState();
   }
 

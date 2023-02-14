@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:inzoid/constant/color_const.dart';
 import 'package:inzoid/constant/text_const.dart';
+import 'package:inzoid/get_storage_services/get_storage_service.dart';
 import 'package:inzoid/view/category_screen.dart';
 import 'package:sizer/sizer.dart';
 import '../components/common_widget.dart';
@@ -33,6 +34,16 @@ class _FilterScreenState extends State<FilterScreen> {
     '0xff934232',
     '0xff444B73',
   ];
+
+  @override
+  void initState() {
+    _filterScreenController.rangeOfSlider =
+        double.parse(GetStorageServices.getStart().toString());
+    _filterScreenController.rangeOfSlider1 =
+        double.parse(GetStorageServices.getEnd().toString());
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -361,8 +372,9 @@ class _FilterScreenState extends State<FilterScreen> {
             _filterScreenController.indexOfColor = 0;
             _filterScreenController.materialName = null;
             _filterScreenController.indexOfMaterialColor = 0;
+            GetStorageServices.setStart(0);
+            GetStorageServices.setEnd(10000);
             Get.back();
-            setState(() {});
           },
           icon: Icon(
             Icons.arrow_back_ios,
@@ -393,8 +405,9 @@ class _FilterScreenState extends State<FilterScreen> {
                   _filterScreenController.indexOfColor = 0;
                   _filterScreenController.materialName = null;
                   _filterScreenController.indexOfMaterialColor = 0;
+                  GetStorageServices.setStart(0);
+                  GetStorageServices.setEnd(10000);
                   Get.back();
-                  setState(() {});
                 },
                 child: CommonText.textBoldWight500(
                     text: TextConst.reset, color: CommonColor.themColor309D9D),

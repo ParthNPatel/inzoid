@@ -47,8 +47,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   int categorySelected = 0;
 
   int pageSelected = 0;
-  FilterScreenController filterScreenController =
-      Get.put(FilterScreenController());
+  FilterScreenController controller = Get.put(FilterScreenController());
   @override
   Widget build(BuildContext context) {
     print('---widget.category}----${widget.category}');
@@ -242,107 +241,71 @@ class _CategoryScreenState extends State<CategoryScreen> {
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
                 if (snapshot.hasData) {
-                  print('----DEMO${filterScreenController.materialName}');
-                  print('----DEMO1${filterScreenController.seasonName}');
-                  print('----DEMO2${filterScreenController.sizeName}');
-                  print('----DEMO3${filterScreenController.colorName}');
-                  print('----startPrice${filterScreenController.startPrice}');
-                  print('----endPrice${filterScreenController.endPrice}');
-
                   if (snapshot.data!.docs.length != 0) {
-                    return MasonryGridView.count(
-                      // mainAxisSpacing: 20,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: snapshot.data!.docs.length,
-                      padding: EdgeInsets.symmetric(horizontal: 4.w),
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        var data = snapshot.data!.docs[index];
-                        if (filterScreenController.startPrice == null &&
-                            filterScreenController.endPrice == null &&
-                            filterScreenController.colorName == null) {
-                          print('------0000');
-                          return buildProductTile(snapshot, index, data);
-                        } else if (data['price'] >
-                                filterScreenController.startPrice &&
-                            data['price'] < filterScreenController.endPrice &&
-                            (data['color'] as List)
-                                .contains(filterScreenController.colorName)) {
-                          print('------111');
+                    return GetBuilder<FilterScreenController>(
+                      builder: (filterScreenController) {
+                        print(
+                            '----filterScreenController.materialName==${filterScreenController.materialName}');
+                        print(
+                            '----filterScreenController.seasonName--${filterScreenController.seasonName}');
+                        print(
+                            '----filterScreenController.sizeName---${filterScreenController.sizeName}');
+                        print(
+                            '----filterScreenController.colorName---${filterScreenController.colorName}');
+                        filterScreenController.startPrice =
+                            GetStorageServices.getStart();
+                        filterScreenController.endPrice =
+                            GetStorageServices.getEnd();
+                        print(
+                            '----startPrice${filterScreenController.startPrice}');
+                        print('----endPrice${filterScreenController.endPrice}');
+                        return MasonryGridView.count(
+                          // mainAxisSpacing: 20,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: snapshot.data!.docs.length,
+                          padding: EdgeInsets.symmetric(horizontal: 4.w),
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            var data = snapshot.data!.docs[index];
+                            if (filterScreenController.startPrice == 0 &&
+                                filterScreenController.endPrice == 10000 &&
+                                filterScreenController.colorName == null) {
+                              print('------0000');
+                              return buildProductTile(snapshot, index, data);
+                            } else if (data['price'] >
+                                    filterScreenController.startPrice &&
+                                data['price'] <
+                                    filterScreenController.endPrice &&
+                                (data['color'] as List).contains(
+                                    filterScreenController.colorName)) {
+                              print('------111');
 
-                          return buildProductTile(snapshot, index, data);
-                        } else if (data['price'] >
-                                filterScreenController.startPrice &&
-                            data['price'] < filterScreenController.endPrice &&
-                            filterScreenController.colorName == null) {
-                          print('------2222');
+                              return buildProductTile(snapshot, index, data);
+                            } else if (data['price'] >
+                                    filterScreenController.startPrice &&
+                                data['price'] <
+                                    filterScreenController.endPrice &&
+                                filterScreenController.colorName == null) {
+                              print('------2222');
 
-                          return buildProductTile(snapshot, index, data);
-                        } else if (filterScreenController.startPrice == 0 &&
-                            filterScreenController.endPrice == 10000 &&
-                            (data['color'] as List)
-                                .contains(filterScreenController.colorName)) {
-                          print('------3333');
+                              return buildProductTile(snapshot, index, data);
+                            } else if (filterScreenController.startPrice == 0 &&
+                                filterScreenController.endPrice == 10000 &&
+                                (data['color'] as List).contains(
+                                    filterScreenController.colorName)) {
+                              print('------3333');
 
-                          return buildProductTile(snapshot, index, data);
-                        } else {
-                          print('------4444');
+                              return buildProductTile(snapshot, index, data);
+                            } else {
+                              print('------4444');
 
-                          return SizedBox();
-                        }
+                              return SizedBox();
+                            }
+                          },
+                          crossAxisCount: 2,
+                        );
                       },
-                      crossAxisCount: 2,
                     );
-
-                    // GridView.builder(
-                    //     physics: NeverScrollableScrollPhysics(),
-                    //     itemCount: snapshot.data!.docs.length,
-                    //     padding: EdgeInsets.symmetric(horizontal: 4.w),
-                    //     shrinkWrap: true,
-                    //     gridDelegate:
-                    //         SliverGridDelegateWithFixedCrossAxisCount(
-                    //             crossAxisCount: 2,
-                    //             mainAxisSpacing: 17.sp,
-                    //             childAspectRatio: 2.2.sp / 3.7.sp,
-                    //             crossAxisSpacing: 10),
-                    //     itemBuilder: (context, index) {
-                    //       var data = snapshot.data!.docs[index];
-                    //       if (filterScreenController.startPrice == null &&
-                    //           filterScreenController.endPrice == null &&
-                    //           filterScreenController.colorName == null) {
-                    //         print('------0000');
-                    //         return buildProductTile(snapshot, index, data);
-                    //       } else if (data['price'] >
-                    //               filterScreenController.startPrice &&
-                    //           data['price'] <
-                    //               filterScreenController.endPrice &&
-                    //           (data['color'] as List).contains(
-                    //               filterScreenController.colorName)) {
-                    //         print('------111');
-                    //
-                    //         return buildProductTile(snapshot, index, data);
-                    //       } else if (data['price'] >
-                    //               filterScreenController.startPrice &&
-                    //           data['price'] <
-                    //               filterScreenController.endPrice &&
-                    //           filterScreenController.colorName == null) {
-                    //         print('------2222');
-                    //
-                    //         return buildProductTile(snapshot, index, data);
-                    //       } else if (filterScreenController.startPrice ==
-                    //               null &&
-                    //           filterScreenController.endPrice == 10000 &&
-                    //           (data['color'] as List).contains(
-                    //               filterScreenController.colorName)) {
-                    //         print('------3333');
-                    //
-                    //         return buildProductTile(snapshot, index, data);
-                    //       } else {
-                    //         print('------4444');
-                    //
-                    //         return SizedBox();
-                    //       }
-                    //     });
                   } else {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
